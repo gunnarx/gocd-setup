@@ -12,21 +12,34 @@ type=
 server=go-server-${version}.noarch.${type}
 agent=go-agent-${version}.noarch.${type}
 
-wget https://download.go.cd/gocd-$type/$server || fail "download failed, (is wget installed?)"
-wget https://download.go.cd/gocd-$type/$agent  || fail "download failed"
+serverurl=
+agenturl=
+
+# The download URL seems to require an actual web browser as agent
+# or something, the redirect to the file fails otherwise.
+# The end result is the same, so ignoring that...
+agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
+
+curl=$(which curl)
+[ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
+
+curl -A "$agent_str" -L https://download.go.cd/gocd-$type/$server >$server || fail "download failed, (is curl installed?)"
+curl -A "$agent_str" -L https://download.go.cd/gocd-$type/$server >$server || fail "download failed, (is curl installed?)"
 
 case $type in
    rpm)
       sudo yum install -y java-1.7.0-openjdk
       sudo rpm -iv $server
       sudo rpm -iv $agent
-   ;
+      ;;
    deb)
       sudo apt-get install -y openjdk-7-jre
       sudo dpkg -i $server
       sudo dpkg -i $agent
+      ;;
    *)
       fail
+      ;;
 esac
 
 echo 'Creating "go" user'
