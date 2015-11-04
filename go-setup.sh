@@ -2,17 +2,6 @@
 
 version=15.2.0-2248
 
-# FIXME ------------
-
-echo "Warning, script is broken because wget downloads not "
-echo "allowed - try running the download manually in your"
-echo "browser instead.  then performthe script steps manually"
-echo "it's easy to see what needs to be done at least..."
-
-exit 
-
-# FIXME ------------
-
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 type=
@@ -28,10 +17,12 @@ wget https://download.go.cd/gocd-$type/$agent  || fail "download failed"
 
 case $type in
    rpm)
+      sudo yum install -y java-1.7.0-openjdk
       sudo rpm -iv $server
       sudo rpm -iv $agent
    ;
    deb)
+      sudo apt-get install -y openjdk-7-jre
       sudo dpkg -i $server
       sudo dpkg -i $agent
    *)
@@ -47,6 +38,16 @@ sudo chown -R go:go /var/{run,lib}/{go-agent,go-server}
 echo Edit /etc/defaults/go-agent
 echo Set the Go server IP address
 
+sudo cp /etc/default/go-agent /tmp/newconf
+sudo chmod 666 /tmp/newconf
+java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | grep java-1.7.0-openjdk-1.7.0)/jre
+
+cat <<EEE >>/tmp/newconf
+export JAVA_HOME="$java_home"
+EEE
+
+sudo cp /tmp/newconf /etc/default/go-agent
+
 echo Try running with 
-echo sudo su go -c /etc/init.d/go-agent start
+echo 'sudo su go -c "/etc/init.d/go-agent start"'
 
