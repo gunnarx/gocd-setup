@@ -1,4 +1,6 @@
 #!/bin/sh
+# (C) 2015 Gunnar Andersson
+# License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 version=15.2.0-2248
 
@@ -16,8 +18,8 @@ serverurl=
 agenturl=
 
 # The download URL seems to require an actual web browser as agent
-# or something, the redirect to the file fails otherwise.
-# The end result is the same, so ignoring that...
+# or something?  The redirect to the file fails otherwise.
+# We need the download so here's an agent string...
 agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 
 curl=$(which curl)
@@ -63,4 +65,31 @@ sudo cp /tmp/newconf /etc/default/go-agent
 
 echo Try running with 
 echo 'sudo su go -c "/etc/init.d/go-agent start"'
+
+echo "if this is a server install, hit return twice to continue"
+echo
+echo "OTHERWISE HIT CTRL-C!"
+read x
+read x
+
+echo
+echo "If this is a server install, generating ssh-key for git pushes from
+server (config files are git pushed as a backup). For agent, skip this. "
+
+sudo su go ssh-keygen
+
+echo "Setting up a remote to push config file backups"
+CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
+
+cd /var/lib/go-server/db/config.git && sudo su go -c "git remote add backup $CONFIG_REMOTE"
+cd /var/lib/go-server/db/config.git && sudo su go -c "git config push.default simple"
+
+echo "Adding hourly crontab job to push config changes"
+
+CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
+sudo cat <<XXX >$CRONSCRIPT
+#!/bin/sh
+su go -c "cd /var/lib/go-server/db/config.git && git push backup master"
+XXX
+sudo chmod 755 $CRONSCRIPT
 
