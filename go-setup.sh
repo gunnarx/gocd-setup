@@ -25,7 +25,7 @@ agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
-curl -A "$agent_str" -L https://download.go.cd/gocd-$type/$server >$server || fail "download failed, (is curl installed?)"
+curl -A "$agent_str" -L https://download.go.cd/gocd-$type/$agent >$agent || fail "download failed, (is curl installed?)"
 curl -A "$agent_str" -L https://download.go.cd/gocd-$type/$server >$server || fail "download failed, (is curl installed?)"
 
 case $type in
