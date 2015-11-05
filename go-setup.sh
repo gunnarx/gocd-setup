@@ -48,7 +48,7 @@ echo 'Creating "go" user'
 sudo adduser go
 
 echo "Fixing install/log directories to be accessible for go user"
-sudo chown -R go:go /var/{run,lib}/{go-agent,go-server}
+sudo chown -R go:go /var/{log,run,lib}/{go-agent,go-server}
 
 echo Edit /etc/defaults/go-agent
 echo Set the Go server IP address
