@@ -1,33 +1,47 @@
 #!/bin/sh
-# (C) Gunnar Andersson
+# (C) 2015 Gunnar Andersson
 # LICENSE: GPLv2
 
+echo "--------------------------------------------------------"
 echo This script is mostly for instruction, it might fail, 
 echo in which case you are encouraged to read the script and
-echo use it as instruction information instead.
+echo use it just as information instead.
+echo "--------------------------------------------------------"
 
-GO_SERVER=http://genivigo.com
-GO_PORT=8153
+. ./go_server || { echo  "Can't find go_server definition" ; exit 1 ; }
 
-CCURL=$GO_SERVER:$GO_PORT/go/cctray.xml
+CCURL=$GO_SERVER_URL:$GO_SERVER_PORT/go/cctray.xml
 
 # Modern fedora uses dnf, earlier use yum, ubuntu/debian uses apt-get
-[ -x $(which yum) ] && installer=yum
-[ -x $(which dnf) ] && installer=dnf
+installer=UNKNOWN
+os=fedora
+
+[ -x /usr/bin/yum ] && installer=yum
+[ -x /usr/bin/dnf ] && installer=dnf
 
 # Package install might work on debian, haven't tested
-[ -x $(which apt-get) ] && { installer=apt-get ; os=ubuntu ; }
+[ -x /usr/bin/apt-get ] && { installer=apt-get ; os=ubuntu ; }
 
 if [ $os = ubuntu ] ; then
    echo "Installing for ubuntu (debian)"
    # Package exists on ubuntu according to web page - I haven't tested debian
-   sudo $installer buildnotify
+   sudo $installer install BuildNotify
 else
-   # On earlier fedora, I had to install using python installation method
-   # Maybe it is on later fedoras, I don't know
+   # On an old fedora, I had to install using python installation method
+   # Maybe an rpm package is available now, I don't know.
    echo "*** Assuming Fedora OS - if using arch, suse or other, please edit script!"
    echo Installing using Python PIP easy_install
-   sudo $installer python-pip pyqt4
-   easy_install buildnotify
+   sudo $installer -q install python-pip pyqt4
+   sudo easy_install BuildNotify
 fi
+
+echo "--------------------------------------------------------"
+echo "Done (check for errors above)"
+echo
+echo "Setup: If all is OK, you can run buildnotifyapplet.py"
+echo "Then find it in the tray, right click -> Preferences"
+echo "Then add monitoring for this url: "
+echo "$CCURL"
+echo "--------------------------------------------------------"
+
 
