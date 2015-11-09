@@ -44,7 +44,7 @@ sudo useradd go -G go
 echo "Fixing install/log directories to be accessible for go user"
 sudo chown -R go:go /var/{log,lib}/go-agent
 
-[ -f go-agent.conf ] || { echo "Can't find go-agent.conf in this directory - giving up" ; exit 1 ; }
+[ -f go-agent.conf ] || fail "Can't find go-agent.conf in this directory - giving up"
 
 echo Copying default conf to /etc/defaults/go-agent
 sudo cp go-agent.conf /etc/defaults/go-agent
@@ -56,14 +56,17 @@ java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep "java-.*-openjdk-.*$")/jre
 [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
 [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
-# Adding JAVA_HOME to config file
+# Adding JAVA_HOME to config file - this is a bit messy
 cp /etc/defaults/go-agent /tmp/newconf.$$
-sudo chmod 666 /tmp/newconf
+sudo chmod 666 /tmp/newconf.$$
 cat <<EEE >>/tmp/newconf
 export JAVA_HOME="$java_home"
 EEE
-sudo cp /tmp/newconf.$$ /etc/default/go-agent && rm /tmp/newconf.$$
+
+# OK, put it back and just in case, fix up permissions and stuff
+sudo mv /tmp/newconf.$$ /etc/default/go-agent
 sudo chown root:root /etc/default/go-agent
+sudo chmod 644 /etc/default/go-agent
 
 echo "Done.  Try running agent with: "
 echo 'sudo su go -c "/etc/init.d/go-agent start"'
