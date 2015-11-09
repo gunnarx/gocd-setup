@@ -77,7 +77,12 @@ echo "Adding hourly crontab job to push config changes"
 CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
 sudo cat <<XXX >$CRONSCRIPT
 #!/bin/sh
+
+# Backup (push) server config to git repo
 su go -c "cd /var/lib/go-server/db/config.git && git push backup master"
+
+# Pull down new custom commands, if they were added to git repo
+su go -c "cd /var/lib/go-server/db/command_repository/genivi && git pull origin master"
 XXX
 sudo chmod 755 $CRONSCRIPT
 
