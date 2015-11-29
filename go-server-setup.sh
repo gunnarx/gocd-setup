@@ -48,10 +48,10 @@ sudo groupadd go
 sudo useradd go -g go
 
 echo "Fixing install/log directories to be accessible for go user"
-sudo chown -R go:go /var/{log,run,lib}/go-server
+sudo chown -R go:go /var/{log,run,lib}/go-server  || fail "Can't chown directories"
 
-sudo cp /etc/default/go-server /tmp/newconf.$$
-sudo chmod 666 /tmp/newconf.$$
+sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
+sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
 
 javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
 java_home=/usr/lib/jvm/$javadir/jre
@@ -63,24 +63,24 @@ cat <<EEE >>/tmp/newconf.$$
 export JAVA_HOME="$java_home"
 EEE
 
-sudo cp /tmp/newconf.$$ /etc/default/go-server
+sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
 
 echo
 echo "If this is a server install, generating ssh-key for git pushes from
 server (config files are git pushed as a backup)."
 
-sudo su go ssh-keygen
+sudo su go ssh-keygen || fail "Creating ssh keys failed"
 
 echo "Setting up a remote to push config file backups"
 CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
 
-cd /var/lib/go-server/db/config.git && sudo su go -c "git remote add backup $CONFIG_REMOTE"
-cd /var/lib/go-server/db/config.git && sudo su go -c "git config push.default simple"
+cd /var/lib/go-server/db/config.git && sudo su go -c "git remote add backup $CONFIG_REMOTE" || fail "Adding backup git remote"
+cd /var/lib/go-server/db/config.git && sudo su go -c "git config push.default simple" || fail "git config push"
 
 echo "Adding hourly crontab job to push config changes"
 
 CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
-sudo cat <<XXX >$CRONSCRIPT
+sudo cat <<XXX >$CRONSCRIPT || fail "Creating cronscript"
 #!/bin/sh
 
 # Backup (push) server config to git repo
@@ -89,7 +89,7 @@ su go -c "cd /var/lib/go-server/db/config.git && git push backup master"
 # Pull down new custom commands, if they were added to git repo
 su go -c "cd /var/lib/go-server/db/command_repository/genivi && git pull origin master"
 XXX
-sudo chmod 755 $CRONSCRIPT
+sudo chmod 755 $CRONSCRIPT || fail "Chmodding cronscript"
 
 echo Try running with 
 echo 'sudo su go -c "/etc/init.d/go-server start"'
