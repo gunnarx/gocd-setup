@@ -40,7 +40,7 @@ RUN chmod 700 /home/xuser
 ADD dummy /tmp/dummy
 
 # Fetch script
-RUN git clone http://github.com/gunnarx/gocd-setup.git /home/xuser/gocd-setup && ls /home/xuser/gocd-setup
+RUN git clone http://github.com/gunnarx/gocd-setup.git /home/xuser/gocd-setup 2>&1 && ls /home/xuser/gocd-setup
 RUN chown -R xuser:xuser /home/xuser
 
 # The actual provisioning script
