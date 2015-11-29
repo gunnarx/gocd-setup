@@ -39,8 +39,6 @@ case $type in
       sudo rpm -iv $file || fail "RPM install failed"
       ;;
    deb)
-      # Thanks to gmacario, this seems to have a positive effect on apt-get noise
-      export DEBIAN_FRONTEND=noninteractive
       sudo apt-get install -y openjdk-7-jre unzip
       sudo dpkg -i $file || fail "DEB install failed"
       ;;

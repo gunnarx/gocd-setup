@@ -25,7 +25,7 @@ FROM phusion/baseimage:0.9.17
 
 # Need git to fetch the provisioning script, the rest is done by the script
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git
+RUN apt-get install -y git
 
 # xuser is just a guy that keeps stuff around...
 # It's where I first look for stuff in my containers when 
