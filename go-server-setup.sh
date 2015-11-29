@@ -7,15 +7,15 @@ version=15.2.0-2248
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 type=
-[ -e /etc/redhat-release ] && type=rpm
+arch=
+[ -e /etc/redhat-release ] && type=rpm && arch=".noarch"
 [ -e /etc/debian-release ] && type=deb
 [ -x "$(which apt-get)" ] && type=deb
-[ -x "$(which yum)" ] && type=rpm
-[ -x "$(which dnf)" ] && type=rpm
+[ -x "$(which yum)" ] && type=rpm && arch=".noarch"
+[ -x "$(which dnf)" ] && type=rpm && arch=".noarch"
 [ -z "$type" ] && { fail "Can't figure out rpm/rpm - please check script" ; exit 1 ; }
 
-server=go-server-${version}.noarch.${type}
-
+server=go-server-${version}${arch}.${type}
 serverurl=
 
 # The download URL seems to require an actual web browser as agent
