@@ -77,8 +77,13 @@ echo
 echo "If this is a server install, generating ssh-key for git pushes from
 server (config files are git pushed as a backup)."
 
-sudo mkdir -p /home/go/.ssh
-sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+if [ -f /home/go/.ssh/id_rsa ] ; then
+   echo "SSH key exists -- skipping"
+else
+   sudo su go -c 'mkdir -p /home/go/.ssh'
+   sudo su go -c 'chmod 700 /home/go/.ssh'
+   sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+fi
 
 echo "Starting go-server to make it create the directories etc."
 sudo service go-server start &
