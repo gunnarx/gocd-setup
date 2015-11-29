@@ -30,7 +30,7 @@ curl=$(which curl)
 if [ -f "$file" ] ; then
    echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)"
 else
-   curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
+   curl -# -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
 fi
 
 case $type in
