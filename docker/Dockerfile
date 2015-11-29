@@ -44,7 +44,7 @@ RUN git clone http://github.com/gunnarx/gocd-setup.git /home/xuser/gocd-setup 2>
 RUN chown -R xuser:xuser /home/xuser
 
 # The actual provisioning script
-RUN /home/xuser/gocd-setup/go-server-setup.sh
+RUN cd /home/xuser/gocd-setup && ./go-server-setup.sh
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
