@@ -74,6 +74,13 @@ server (config files are git pushed as a backup)."
 sudo mkdir -p /home/go/.ssh
 sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
 
+echo "Starting go-server to make it create the directories etc."
+sudo service go-server start &
+echo "Waiting 5 seconds"
+sleep 5
+echo "Stopping go-server"
+sudo service go-server stop
+
 echo "Setting up a remote to push config file backups"
 CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
 
