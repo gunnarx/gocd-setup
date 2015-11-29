@@ -98,11 +98,20 @@ sudo service go-server stop
 echo "Setting up a remote to push config file backups"
 CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
 
-cd /var/lib/go-server/db/config.git && sudo su go -c "git remote add backup $CONFIG_REMOTE" || fail "Adding backup git remote"
-cd /var/lib/go-server/db/config.git && sudo su go -c "git config push.default simple" || fail "git config push"
+# SSH key may not yet be set up, so pull via HTTP this time
+CONFIG_REMOTE_PULL=http://github.com/genivigo/server-config-backup.git
+
+cd /var/lib/go-server/db/config.git || fail "config.git not yet created. (we didn't wait long enough?)"
+sudo su go -c "git remote add backup $CONFIG_REMOTE" || fail "Adding backup git remote"
+sudo su go -c "git remote add first_pull $CONFIG_REMOTE_PULL" || fail "Adding backup git remote"
+sudo su go -c "git config push.default simple" || fail "git config push"
+sudo su go -c "git fetch first_pull" || fail "git fetch"
+sudo su go -c "git reset first_pull/master --hard" || fail "git restore backup"
+
+# Replace default config with the one taken from backup
+sudo cp cruise-config.xml /etc/go/
 
 echo "Adding hourly crontab job to push config changes"
-
 CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
 sudo cat <<XXX >$CRONSCRIPT || fail "Creating cronscript"
 #!/bin/sh
