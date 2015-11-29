@@ -30,7 +30,7 @@ curl=$(which curl)
 if [ -f "$file" ] ; then
    echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)"
 else
-   curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)" 
+   curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
 fi
 
 case $type in
@@ -87,8 +87,11 @@ fi
 
 echo "Starting go-server to make it create the directories etc."
 sudo service go-server start &
-echo "Waiting 5 seconds"
-sleep 5
+echo "Initialization takes a while... waiting 15 seconds before continuing"
+echo -n "15.."
+sleep 1
+echo "14... have patience"
+sleep 14
 echo "Stopping go-server"
 sudo service go-server stop
 
@@ -112,6 +115,9 @@ su go -c "cd /var/lib/go-server/db/command_repository/genivi && git pull origin 
 XXX
 sudo chmod 755 $CRONSCRIPT || fail "Chmodding cronscript"
 
-echo Try running with 
+service go-server status
+echo "Try starting with"
+echo "sudo service go-server start"
+echo "otherwise with:"
 echo 'sudo su go -c "/etc/init.d/go-server start"'
 
