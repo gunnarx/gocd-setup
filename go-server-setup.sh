@@ -15,8 +15,9 @@ arch=
 [ -x "$(which dnf)" ] && type=rpm && arch=".noarch"
 [ -z "$type" ] && { fail "Can't figure out rpm/rpm - please check script" ; exit 1 ; }
 
-server=go-server-${version}${arch}.${type}
-serverurl=
+file=go-server-${version}${arch}.${type}
+filehost="http://download.go.cd/gocd-deb"
+fileurl="$filehost/$file"
 
 # The download URL seems to require an actual web browser as agent
 # or something?  The redirect to the file fails otherwise.
@@ -26,16 +27,16 @@ agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
-curl -C - -A "$agent_str" -L https://download.go.cd/gocd-$type/$server >$server || fail "download failed, (is curl installed?)"
+curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
 
 case $type in
    rpm)
-      sudo yum install -y java-1.7.0-openjdk
-      sudo rpm -iv $server
+      sudo yum install -y java-1.7.0-openjdk unzip
+      sudo rpm -iv $file || fail "RPM install failed"
       ;;
    deb)
-      sudo apt-get install -y openjdk-7-jre
-      sudo dpkg -i $server
+      sudo apt-get install -y openjdk-7-jre unzip
+      sudo dpkg -i $file || fail "DEB install failed"
       ;;
    *)
       fail
@@ -44,7 +45,7 @@ esac
 
 echo 'Creating "go" user'
 sudo groupadd go
-sudo useradd go -G go
+sudo useradd go -g go
 
 echo "Fixing install/log directories to be accessible for go user"
 sudo chown -R go:go /var/{log,run,lib}/go-server
