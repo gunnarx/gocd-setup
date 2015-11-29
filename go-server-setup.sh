@@ -9,7 +9,10 @@ fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 type=
 [ -e /etc/redhat-release ] && type=rpm
 [ -e /etc/debian-release ] && type=deb
-[ -z "$type" ] && { fail "Can't figure out rpm/deb - please check script" ; exit 1 ; }
+[ -x "$(which apt-get)" ] && type=deb
+[ -x "$(which yum)" ] && type=rpm
+[ -x "$(which dnf)" ] && type=rpm
+[ -z "$type" ] && { fail "Can't figure out rpm/rpm - please check script" ; exit 1 ; }
 
 server=go-server-${version}.noarch.${type}
 
