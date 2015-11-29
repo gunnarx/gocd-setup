@@ -52,7 +52,8 @@ sudo chown -R go:go /var/{log,run,lib}/go-server
 sudo cp /etc/default/go-server /tmp/newconf.$$
 sudo chmod 666 /tmp/newconf.$$
 
-java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep "java-.*-openjdk-.*$")/jre
+javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
+java_home=/usr/lib/jvm/$javadir/jre
 [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
 [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
