@@ -27,7 +27,11 @@ agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
-curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
+if [ -f "$file" ] ; then
+   echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)"
+else
+   curl -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)" 
+fi
 
 case $type in
    rpm)
