@@ -46,6 +46,8 @@ esac
 echo 'Creating "go" user'
 sudo groupadd go
 sudo useradd go -g go
+sudo mkdir -p /home/go
+sudo chown -R go:go /home/go
 
 echo "Fixing install/log directories to be accessible for go user"
 sudo chown -R go:go /var/{log,run,lib}/go-server  || fail "Can't chown directories"
@@ -69,7 +71,8 @@ echo
 echo "If this is a server install, generating ssh-key for git pushes from
 server (config files are git pushed as a backup)."
 
-sudo su go ssh-keygen || fail "Creating ssh keys failed"
+sudo mkdir -p /home/go/.ssh
+sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
 
 echo "Setting up a remote to push config file backups"
 CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
