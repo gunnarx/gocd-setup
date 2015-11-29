@@ -52,6 +52,11 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Ports
 EXPOSE 8153 8154
 
+# Add service script for baseimage's init "runit"
+RUN sed -ie "s/DAEMON=Y/DAEMON=N/" /etc/default/go-server
+RUN mkdir /etc/service/go-server
+ADD go-server.runit.sh /etc/service/go-server/run
+
 # Use baseimage-docker's init system as default command
-CMD ["/sbin/my_init", "service", "go-server", "start" ]
+CMD ["/sbin/my_init"]
 
