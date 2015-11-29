@@ -54,7 +54,9 @@ sudo mkdir -p /home/go
 sudo chown -R go:go /home/go
 
 echo "Fixing install/log directories to be accessible for go user"
-sudo chown -R go:go /var/{log,run,lib}/go-server  || fail "Can't chown directories"
+sudo chown -R go:go /var/log/go-server || fail "Can't chown directories log"
+sudo chown -R go:go /var/lib/go-server || fail "Can't chown directories lib"
+sudo chown -R go:go /var/run/go-server || fail "Can't chown directories run"
 
 sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
 sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
