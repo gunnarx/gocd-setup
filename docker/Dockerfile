@@ -28,7 +28,7 @@ FROM phusion/baseimage:0.9.17
 RUN apt-get update ;\
     apt-get install -y git ;\
     apt-get clean ;\
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /tmp/* /var/tmp/*
 
 # xuser is just a guy that keeps stuff around...
 # It's where I first look for stuff in my containers when 
