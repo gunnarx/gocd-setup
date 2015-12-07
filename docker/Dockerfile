@@ -24,30 +24,34 @@
 FROM phusion/baseimage:0.9.17
 
 # Need git to fetch the provisioning script, the rest is done by the script
-RUN apt-get update
-RUN apt-get install -y git
+# Clean as much as possible before committing keeps the docker image size  down.
+RUN apt-get update ;\
+    apt-get install -y git ;\
+    apt-get clean ;\
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # xuser is just a guy that keeps stuff around...
 # It's where I first look for stuff in my containers when 
 # I have forgotten what they actually do ;)
 # I should probably remove it, it doesn't add to security
 # to keep unused users around...
-RUN useradd xuser --home-dir=/home/xuser --create-home 
-RUN chmod 700 /home/xuser
+RUN useradd xuser --home-dir=/home/xuser --create-home ;\
+    chmod 700 /home/xuser
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
 ADD dummy /tmp/dummy
 
-# Fetch script
-RUN git clone http://github.com/gunnarx/gocd-setup.git /home/xuser/gocd-setup 2>&1 && ls /home/xuser/gocd-setup
-RUN chown -R xuser:xuser /home/xuser
+# Fetch script into xuser home dir
+RUN su xuser -c "git clone http://github.com/gunnarx/gocd-setup.git /home/xuser/gocd-setup" 2>&1 && ls /home/xuser/gocd-setup
 
-# The actual provisioning script
+# The actual provisioning script - 
+# TODO add typical cleanup to end of script so we don't have to do it here
 RUN cd /home/xuser/gocd-setup && ./go-server-setup.sh
 
 # Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean ;\
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Ports
 EXPOSE 8153 8154
