@@ -48,12 +48,13 @@ case $type in
       ;;
 esac
 
-echo 'Creating "go" user'
-sudo groupadd go --gid 1500
-sudo useradd go -g go -uid 1500
+#echo 'Creating "go" user'
+#sudo groupadd go --gid 1500
+#sudo useradd go -g go -uid 1500
+echo 'Creating gouser'
 sudo useradd gouser -g go -uid 1501 # For account creation
-sudo mkdir -p /home/go
-sudo chown -R go:go /home/go
+#sudo mkdir -p /home/go
+#sudo chown -R go:go /home/go
 
 echo "Fixing install/log directories to be accessible for go user"
 sudo chown -R go:go /var/log/go-server || fail "Can't chown directories log"
@@ -79,16 +80,16 @@ echo
 echo "If this is a server install, generating ssh-key for git pushes from
 server (config files are git pushed as a backup)."
 
-if [ -f /home/go/.ssh/id_rsa ] ; then
+if [ -f /var/go/.ssh/id_rsa ] ; then
    echo "SSH key exists -- skipping"
 else
-   sudo su go -c 'mkdir -p /home/go/.ssh'
-   sudo su go -c 'chmod 700 /home/go/.ssh'
-   sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+   sudo su go -c 'mkdir -p /var/go/.ssh'
+   sudo su go -c 'chmod 700 /var/go/.ssh'
+   sudo su go -c 'ssh-keygen -f /var/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
    echo
    echo "Here is the public key for git access -- add it to Github."
    echo
-   cat /home/go/.ssh/id_rsa.pub
+   cat /var/go/.ssh/id_rsa.pub
    echo
 fi
 
