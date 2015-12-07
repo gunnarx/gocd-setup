@@ -51,6 +51,7 @@ esac
 echo 'Creating "go" user'
 sudo groupadd go --gid 1500
 sudo useradd go -g go -uid 1500
+sudo useradd gouser -g go -uid 1501 # For account creation
 sudo mkdir -p /home/go
 sudo chown -R go:go /home/go
 
