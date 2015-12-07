@@ -39,6 +39,7 @@ case $type in
       sudo rpm -iv $file || fail "RPM install failed"
       ;;
    deb)
+      sudo apt-get update
       sudo apt-get install -y openjdk-7-jre unzip
       sudo dpkg -i $file || fail "DEB install failed"
       ;;
