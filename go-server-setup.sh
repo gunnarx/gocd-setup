@@ -48,8 +48,8 @@ case $type in
 esac
 
 echo 'Creating "go" user'
-sudo groupadd go
-sudo useradd go -g go
+sudo groupadd go --gid 1500
+sudo useradd go -g go -uid 1500
 sudo mkdir -p /home/go
 sudo chown -R go:go /home/go
 
@@ -83,6 +83,11 @@ else
    sudo su go -c 'mkdir -p /home/go/.ssh'
    sudo su go -c 'chmod 700 /home/go/.ssh'
    sudo su go -c 'ssh-keygen -f /home/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+   echo
+   echo "Here is the public key for git access -- add it to Github."
+   echo
+   cat /home/go/.ssh/id_rsa.pub
+   echo
 fi
 
 echo "Starting go-server to make it create the directories etc."
