@@ -49,7 +49,7 @@ sudo cp go-agent.conf /etc/default/go-agent
 
 # This tries to figure out the actual path to openJDK, which includes
 # the minor-version number and such things that might change in the future.
-java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep "java-.*-openjdk-.*$")/jre
+java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep 'java-.*-openjdk-.*$' | head -1)/jre
 
 [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
 [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
