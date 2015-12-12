@@ -39,10 +39,6 @@ case $type in
       ;;
 esac
 
-echo 'Creating "go" group and user'
-sudo groupadd go
-sudo useradd go -G go
-
 echo "Fixing install/log directories to be accessible for go user"
 sudo chown -R go:go /var/{log,lib}/go-agent
 
