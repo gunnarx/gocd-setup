@@ -32,6 +32,7 @@ else
    echo "*** Assuming Fedora OS - if using arch, suse or other, please edit script!"
    echo Installing using Python PIP easy_install
    sudo $installer -q install python-pip pyqt4
+   sudo pip install pytz
    sudo easy_install BuildNotify
 fi
 
