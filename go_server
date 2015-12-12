@@ -1,2 +1,2 @@
-GO_SERVER_URL=go.genivi.org
+GO_SERVER=go.genivi.org
 GO_SERVER_PORT=8153
