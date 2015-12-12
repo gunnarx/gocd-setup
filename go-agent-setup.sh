@@ -63,6 +63,9 @@ cat <<EEE >>/tmp/newconf
 export JAVA_HOME="$java_home"
 EEE
 
+echo GO_SERVER is set to:
+fgrep GO_SERVER= /tmp/newconf.$$
+
 # OK, put it back and just in case, fix up permissions and stuff
 sudo mv /tmp/newconf.$$ /etc/default/go-agent
 sudo chown root:root /etc/default/go-agent
@@ -70,4 +73,3 @@ sudo chmod 644 /etc/default/go-agent
 
 echo "Done.  Try running agent with: "
 echo 'sudo su go -c "/etc/init.d/go-agent start"'
-
