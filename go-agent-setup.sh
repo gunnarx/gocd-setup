@@ -40,6 +40,7 @@ case $type in
 esac
 
 echo "Fixing install/log directories to be accessible for go user"
+sudo mkdir -p /var/{log,lib}/go-agent
 sudo chown -R go:go /var/{log,lib}/go-agent
 
 [ -f go-agent.conf ] || fail "Can't find go-agent.conf in this directory - giving up"
@@ -54,7 +55,7 @@ java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep 'java-.*-openjdk-.*$' | head -
 [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
 [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
-# Adding JAVA_HOME to config file - this is a bit messy
+echo "Adding JAVA_HOME to config file"
 cp /etc/default/go-agent /tmp/newconf.$$
 sudo chmod 666 /tmp/newconf.$$
 cat <<EEE >>/tmp/newconf.$$
