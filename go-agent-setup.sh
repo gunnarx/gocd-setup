@@ -48,8 +48,8 @@ sudo chown -R go:go /var/{log,lib}/go-agent
 
 [ -f go-agent.conf ] || fail "Can't find go-agent.conf in this directory - giving up"
 
-echo Copying default conf to /etc/defaults/go-agent
-sudo cp go-agent.conf /etc/defaults/go-agent
+echo Copying default conf to /etc/default/go-agent
+sudo cp go-agent.conf /etc/default/go-agent
 
 # This tries to figure out the actual path to openJDK, which includes
 # the minor-version number and such things that might change in the future.
@@ -59,7 +59,7 @@ java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep "java-.*-openjdk-.*$")/jre
 [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
 # Adding JAVA_HOME to config file - this is a bit messy
-cp /etc/defaults/go-agent /tmp/newconf.$$
+cp /etc/default/go-agent /tmp/newconf.$$
 sudo chmod 666 /tmp/newconf.$$
 cat <<EEE >>/tmp/newconf
 export JAVA_HOME="$java_home"
