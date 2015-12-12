@@ -7,11 +7,13 @@ version=15.2.0-2248
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 type=
-[ -e /etc/redhat-release ] && type=rpm
-[ -e /etc/debian-release ] && type=deb
-[ -z "$type" ] && { fail "Can't figure out rpm/deb - please check script" ; exit 1 ; }
+[ -e /etc/redhat-release ] && type=rpm && extra=".noarch"
+[ -e /etc/debian-release ] && type=deb && extra=
+[ -x "$(which rpm 2>/dev/null)" ] && type=rpm && extra=".noarch"
+[ -x "$(which dpkg 2>/dev/null)" ] && type=deb && extra=
+[ -z "$type" ] && { fail "Can't figure out rpm/deb - please check script" ; }
 
-agent=go-agent-${version}.noarch.${type}
+agent=go-agent-${version}${extra}.${type}
 
 # The download URL seems to require an actual web browser as agent
 # or something?  The redirect to the file fails otherwise.
@@ -73,3 +75,4 @@ sudo chmod 644 /etc/default/go-agent
 
 echo "Done.  Try running agent with: "
 echo 'sudo su go -c "/etc/init.d/go-agent start"'
+
