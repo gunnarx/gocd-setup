@@ -57,7 +57,7 @@ java_home=/usr/lib/jvm/$(ls /usr/lib/jvm/ | egrep 'java-.*-openjdk-.*$' | head -
 # Adding JAVA_HOME to config file - this is a bit messy
 cp /etc/default/go-agent /tmp/newconf.$$
 sudo chmod 666 /tmp/newconf.$$
-cat <<EEE >>/tmp/newconf
+cat <<EEE >>/tmp/newconf.$$
 export JAVA_HOME="$java_home"
 EEE
 
