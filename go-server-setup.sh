@@ -7,7 +7,7 @@ version=16.3.0-3183
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 set -x
-path=$(./go-download.sh server $version)
+path=$(./download.sh server $version)
 
 # Install Java (see script for version)
 ./install-java.sh

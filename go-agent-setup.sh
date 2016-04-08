@@ -12,7 +12,7 @@ MYDIR="$PWD"
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 # GET AGENT
-file=$(./go-download.sh agent $version)
+file=$(./download.sh agent $version)
 
 # Install Java (see script for version)
 ./install-java.sh

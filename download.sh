@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 [ "$#" -lt 2 ] &&  { echo "Usage: $0 <"agent" or "server">  <version>" ; exit 1 ; }
 
