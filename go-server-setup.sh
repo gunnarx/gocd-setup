@@ -4,7 +4,7 @@
 
 version=16.3.0-3183
 
-fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
+fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
 
 set -x
 path=$(./download.sh server $version)

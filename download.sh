@@ -38,7 +38,7 @@ curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
 if [ -f "$file" ] ; then
-   echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)"
+   echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)" 1>&2
 else
    curl -# -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (network connected?)"
 fi
