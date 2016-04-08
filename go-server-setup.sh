@@ -6,32 +6,9 @@ version=15.2.0-2248
 
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
-type=
-arch=
-[ -e /etc/redhat-release ] && type=rpm && arch=".noarch"
-[ -e /etc/debian-release ] && type=deb
-[ -x "$(which apt-get)" ] && type=deb
-[ -x "$(which yum)" ] && type=rpm && arch=".noarch"
-[ -x "$(which dnf)" ] && type=rpm && arch=".noarch"
-[ -z "$type" ] && { fail "Can't figure out rpm/rpm - please check script" ; exit 1 ; }
-
-file=go-server-${version}${arch}.${type}
-filehost="http://download.go.cd/gocd-deb"
-fileurl="$filehost/$file"
-
-# The download URL seems to require an actual web browser as agent
-# or something?  The redirect to the file fails otherwise.
-# We need the download so here's an agent string...
-agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
-
-curl=$(which curl)
-[ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
-
-if [ -f "$file" ] ; then
-   echo "** $type file exists, skipping download.  (If you see install problems, try deleting it to trigger a fresh download)"
-else
-   curl -# -C - -A "$agent_str" -L "$fileurl" >$file || fail "download failed, (is curl installed?)"
-fi
+set -x
+path=$(./go-download.sh server $version)
+type=$(./rpm-or-deb.sh)
 
 case $type in
    rpm)

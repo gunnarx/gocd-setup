@@ -4,40 +4,16 @@
 
 version=15.2.0-2248
 
+D=$(dirname "$0")
+cd "$D"
+MYDIR="$PWD"
+
 fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
-type=
-[ -e /etc/redhat-release ] && type=rpm && extra=".noarch"
-[ -e /etc/debian-release ] && type=deb && extra=
-[ -x "$(which rpm 2>/dev/null)" ] && type=rpm && extra=".noarch"
-[ -x "$(which dpkg 2>/dev/null)" ] && type=deb && extra=
-[ -z "$type" ] && { fail "Can't figure out rpm/deb - please check script" ; }
+# GET AGENT
+file=$(./go-download.sh agent $version)
 
-agent=go-agent-${version}${extra}.${type}
-
-# The download URL seems to require an actual web browser as agent
-# or something?  The redirect to the file fails otherwise.
-# We need the download so here's an agent string...
-agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
-
-curl=$(which curl)
-[ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
-
-curl -C - -A "$agent_str" -L https://download.go.cd/gocd-$type/$agent >$agent || fail "download failed, (is curl installed?)"
-
-case $type in
-   rpm)
-      sudo yum install -y java-1.7.0-openjdk
-      sudo rpm -iv $agent
-      ;;
-   deb)
-      sudo apt-get install -y openjdk-7-jre
-      sudo dpkg -i $agent
-      ;;
-   *)
-      fail
-      ;;
-esac
+[ -f "$file" ] || fail "No go-agent installation archive found"
 
 echo "Fixing install/log directories to be accessible for go user"
 sudo mkdir -p /var/{log,lib}/go-agent
