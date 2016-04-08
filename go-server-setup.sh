@@ -3,6 +3,7 @@
 # License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 version=16.3.0-3183
+GO_HOME_DIR=/var/go
 
 fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
 
@@ -44,16 +45,18 @@ echo
 echo "If this is a server install, generating ssh-key for git pushes from
 server (config files are git pushed as a backup)."
 
-if [ -f /var/go/.ssh/id_rsa ] ; then
+sudo mkdir -p $GO_HOME_DIR
+
+if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
    echo "SSH key exists -- skipping"
 else
-   sudo su go -c 'mkdir -p /var/go/.ssh'
-   sudo su go -c 'chmod 700 /var/go/.ssh'
-   sudo su go -c 'ssh-keygen -f /var/go/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+   sudo su go -c 'mkdir -p $GO_HOME_DIR/.ssh'
+   sudo su go -c 'chmod 700 $GO_HOME_DIR/.ssh'
+   sudo su go -c 'ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
    echo
    echo "Here is the public key for git access -- add it to Github."
    echo
-   cat /var/go/.ssh/id_rsa.pub
+   cat $GO_HOME_DIR/.ssh/id_rsa.pub
    echo
 fi
 
