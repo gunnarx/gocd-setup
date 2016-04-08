@@ -2,7 +2,8 @@
 # (C) 2015 Gunnar Andersson
 # License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
 
-version=15.2.0-2248
+# SETTINGS
+version=16.3.0-3183
 
 D=$(dirname "$0")
 cd "$D"
