@@ -14,6 +14,9 @@ fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 # GET AGENT
 file=$(./go-download.sh agent $version)
 
+# Install Java (see script for version)
+./install-java.sh
+
 [ -f "$file" ] || fail "No go-agent installation archive found"
 
 echo "Fixing install/log directories to be accessible for go user"

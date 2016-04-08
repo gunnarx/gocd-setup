@@ -8,22 +8,9 @@ fail() { echo "Something went wrong - check script" ; echo $@ ; exit 1 ; }
 
 set -x
 path=$(./go-download.sh server $version)
-type=$(./rpm-or-deb.sh)
 
-case $type in
-   rpm)
-      sudo yum install -y java-1.7.0-openjdk unzip
-      sudo rpm -iv $file || fail "RPM install failed"
-      ;;
-   deb)
-      sudo apt-get update
-      sudo apt-get install -y openjdk-7-jre unzip
-      sudo dpkg -i $file || fail "DEB install failed"
-      ;;
-   *)
-      fail
-      ;;
-esac
+# Install Java (see script for version)
+./install-java.sh
 
 #echo 'Creating "go" user'
 #sudo groupadd go --gid 1500
