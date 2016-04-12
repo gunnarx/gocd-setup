@@ -8,6 +8,6 @@ type=
 [ -x "$(which dnf 2>/dev/null)" ] && type=rpm
 [ -e /etc/redhat-release ] && type=rpm
 [ -e /etc/debian-release ] && type=deb
-[ -z "$type" ] && { fail "Can't figure out rpm/rpm - please check script" ; exit 1 ; }
+[ -z "$type" ] && { fail "Can't figure out rpm/deb - please check script" ; exit 1 ; }
 
 echo $type
