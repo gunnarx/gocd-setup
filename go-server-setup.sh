@@ -64,9 +64,9 @@ sudo mkdir -p $GO_HOME_DIR
 if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
    echo "SSH key exists -- skipping"
 else
-   sudo su go -c 'mkdir -p $GO_HOME_DIR/.ssh'
-   sudo su go -c 'chmod 700 $GO_HOME_DIR/.ssh'
-   sudo su go -c 'ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N ""' || fail "Creating ssh keys failed"
+   sudo su go -c "mkdir -p $GO_HOME_DIR/.ssh"
+   sudo su go -c "chmod 700 $GO_HOME_DIR/.ssh"
+   sudo su go -c "ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N \"\"" || fail "Creating ssh keys failed"
    echo
    echo "Here is the public key for git access -- add it to Github."
    echo
