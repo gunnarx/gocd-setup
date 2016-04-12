@@ -26,22 +26,26 @@ case $type in
       ;;
 esac
 
-#echo 'Creating "go" user'
-echo 'Creating gouser'
-sudo groupadd go --gid 1500
-sudo useradd go -g go --uid 1500 -d /var/go
-sudo useradd gouser -g go --uid 1501 # For account creation
-#sudo chown -R go:go /home/go
+# User/group go is created by rpm/deb package already...
+# This is needed for zip install only
 
-sudo mkdir -p /var/log/go-server
+# echo 'Creating "go" user'
+# sudo groupadd go --gid 1500
+# sudo useradd go -g go --uid 1500 -d /var/go
 
 # (All these dirs should exist after deb/rpm installation)
 echo "Fixing install/log directories to be accessible for go user"
+sudo mkdir -p /var/{log,lib,run}/go-server /var/go # Just in case
 sudo chown -R go:go /var/{log,lib,run}/go-server /var/go || fail "Can't chown a directory"
 sudo chmod 755 /var/{log,lib,run}/go-server /var/go || fail "Can't chmod a directory"
 
+echo 'Creating gouser for account-creation application'
+sudo useradd gouser -g go --uid 1501
+sudo chown -R go:go /home/gouser
+
 sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
 sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
+
 
 javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
 java_home=/usr/lib/jvm/$javadir/jre
