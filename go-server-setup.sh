@@ -4,15 +4,37 @@
 
 version=16.3.0-3183
 GO_HOME_DIR=/var/go
+CRUISE_CONFIG_DIR=/var/lib/go-server/db/config.git/
+COMMANDS_DIR=/var/lib/go-server/db/command_repository
+COMMANDS_DIR_NAME=genivi
+
+# The following URLs should point to an external git repo to which
+# we will have the server push the config XML as a backup.
+# This will be added as a cron job.  You can also set it to "none"
+
+# SSH key may not yet be set up when we install so pull via HTTP...
+# ... but for pushing the server must be configured with a writable URL (SSH)
+# (In theory these could point to different repos) <-- FIXME To be confirmed does pushing to empty repo work?
+CONFIG_REMOTE_FIRST_PULL=http://github.com/genivigo/server-config-backup.git
+CONFIG_REMOTE_PUSH=git@github.com:genivigo/server-config-backup.git
+COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
+
+prompt_with_default() {
+  echo "Please provide $2"
+  echo "Default is: $1"
+  echo "(Hit return to keep default value, or type none to disable)"
+  read -p "$2: " value
+  value=${value:-$1}
+  echo $value
+}
 
 fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
 
-set -x
 path=$(./download.sh server $version)
 
 # Install Java (see script for version), and git and stuff
 #./install-java.sh
-#./install-prerequisites.sh
+./install-prerequisites.sh
 
 type=$(./rpm-or-deb.sh)
 case $type in
@@ -59,18 +81,14 @@ EEE
 
 sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
 
-echo
-echo "If this is a server install, generating ssh-key for git pushes from
-server (config files are git pushed as a backup)."
-
 sudo mkdir -p $GO_HOME_DIR
 
 if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
    echo "SSH key exists -- skipping"
 else
-   sudo su go -c "mkdir -p $GO_HOME_DIR/.ssh"
-   sudo su go -c "chmod 700 $GO_HOME_DIR/.ssh"
-   sudo su go -c "ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N \"\"" || fail "Creating ssh keys failed"
+   sudo -u go mkdir -p $GO_HOME_DIR/.ssh
+   sudo -u go chmod 700 $GO_HOME_DIR/.ssh
+   sudo -u go ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N "" || fail Creating ssh keys failed
    echo
    echo "Here is the public key for git access -- add it to Github."
    echo
@@ -79,56 +97,72 @@ else
 fi
 
 echo "Starting go-server to make it go through initialization"
-sudo service go-server start &
-echo "This can take quite a long a while but it should not be more than 30 seconds or so"
-echo -n "First waiting 15 secs..."
-sleep 1
-echo "14... have patience"
-sleep 14
+sudo service go-server start & >/dev/null 2>&1 
 
-echo Checking for directory /var/lib/go/config.git
-[ ! -d /var/lib/go/config.git ] && echo "still not there... waiting until I see it"
-while [ ! -d /var/lib/go/config.git ] ; do
+echo "While we wait, set up the git remote for the pipeline configuration"
+echo "First the Pull URL (must allow access without login, e.g. http(s)://my.git) : "
+prompt_with_default "$CONFIG_REMOTE_FIRST_PULL" "Pull URL"
+echo "Now the Push URL (must be an SSH login, e.g. user@my.git or ssh://user@my.git) : "
+prompt_with_default "$CONFIG_REMOTE_PUSH" "Push URL"
+
+echo "Finally the repo for custom commands (NOTE this also needs to be manually enabled in Go settings later)"
+prompt_with_default "$COMMANDS_REMOTE" "Commands Repo (could be PULL only, e.g. http)"
+
+
+echo
+echo Checking for directory $CRUISE_CONFIG_DIR
+echo "Note: Total waiting time should not be more than 30 seconds or so."
+[ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
+while [ ! -d $CRUISE_CONFIG_DIR ] ; do
   echo -n "."
   sleep 1
 done
 
-echo "OK, stopping go-server"
+echo "OK init is done.  Stopping go-server."
 sudo service go-server stop
 
+if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
+   cd "$CRUISE_CONFIG_DIR" || fail "config.git still not created. (we didn\'t wait long enough?)"
+   sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
+   sudo -u go git remote add first_pull $CONFIG_REMOTE_FIRST_PULL || fail Adding backup git remote
+   sudo -u go git config push.default simple || fail git config push
+   sudo -u go git fetch first_pull || fail git fetch
+   sudo -u go git reset first_pull/master --hard || fail git restore backup
 
-echo "Setting up a remote to push config file backups"
-CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
+   # Replace the actually used config (in /etc/go) with the one taken from backup
+   sudo cp cruise-config.xml /etc/go/
+   echo "Adding hourly crontab job to push config changes"
+   CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
 
-# SSH key may not yet be set up, so pull via HTTP this time
-CONFIG_REMOTE_PULL=http://github.com/genivigo/server-config-backup.git
+   sudo cat <<"XXX" >$CRONSCRIPT || fail "Creating cronscript"
+   #!/bin/sh
 
-cd /var/lib/go-server/db/config.git || fail "config.git still not created. (we didn\'t wait long enough?)"
-sudo su go -c "git remote add backup $CONFIG_REMOTE" || fail "Adding backup git remote"
-sudo su go -c "git remote add first_pull $CONFIG_REMOTE_PULL" || fail "Adding backup git remote"
-sudo su go -c "git config push.default simple" || fail "git config push"
-sudo su go -c "git fetch first_pull" || fail "git fetch"
-sudo su go -c "git reset first_pull/master --hard" || fail "git restore backup"
-
-# Replace default config with the one taken from backup
-sudo cp cruise-config.xml /etc/go/
-
-echo "Adding hourly crontab job to push config changes"
-CRONSCRIPT=/etc/cron.hourly/go-config-push-backup
-sudo cat <<XXX >$CRONSCRIPT || fail "Creating cronscript"
-#!/bin/sh
-
-# Backup (push) server config to git repo
-su go -c "cd /var/lib/go-server/db/config.git && git push backup master"
-
-# Pull down new custom commands, if they were added to git repo
-su go -c "cd /var/lib/go-server/db/command_repository/genivi && git pull origin master"
+   # Backup (push) server config to git repo
+   su go -c "cd $CRUISE_CONFIG_DIR && git push backup master"
 XXX
-sudo chmod 755 $CRONSCRIPT || fail "Chmodding cronscript"
+   sudo chmod 755 $CRONSCRIPT || fail "Chmodding cronscript"
+
+fi
+
+if [ "$COMMANDS_REMOTE" != "none" ] ; then
+   sudo mkdir -p "$COMMANDS_DIR" || fail "mkdir commands dir"
+   sudo chown go:go "$COMMANDS_DIR" || fail "chown commands dir"
+   sudo chmod 755 "$COMMANDS_DIR"   || fail "chmod commands dir"
+   cd "$COMMANDS_DIR" || fail "cd commands dir"
+
+   sudo -u go git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
+   cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
+
+   sudo cat <<"XXX" >>$CRONSCRIPT || fail "Appending cronscript"
+
+   # Pull down new custom commands, if they were added to git repo
+   su go -c "cd $COMMANDS_DIR/$COMMANDS_DIR_NAME && git pull origin master"
+XXX
+fi
 
 service go-server status
 echo "Try starting with"
 echo "sudo service go-server start"
 echo "otherwise with:"
-echo 'sudo su go -c "/etc/init.d/go-server start"'
+echo 'sudo -u go "/etc/init.d/go-server start"'
 
