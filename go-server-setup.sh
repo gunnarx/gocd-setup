@@ -20,7 +20,6 @@ CONFIG_REMOTE_PUSH=git@github.com:genivigo/server-config-backup.git
 COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
 
 prompt_with_default() {
-  echo "Please provide $2"
   echo "Default is: $1"
   echo "(Hit return to keep default value, or type none to disable)"
   read -p "$2: " value
@@ -63,7 +62,7 @@ sudo chown -R go:go /var/{log,lib,run}/go-server /var/go || fail "Can't chown a 
 sudo chmod 755 /var/{log,lib,run}/go-server /var/go || fail "Can't chmod a directory"
 
 echo 'Creating gouser for account-creation application'
-sudo useradd gouser -g go --uid 1501
+sudo useradd gouser -g go -d /home/gouser --uid 1501
 sudo chown -R go:go /home/gouser
 
 sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
@@ -97,14 +96,16 @@ else
 fi
 
 echo "Starting go-server to make it go through initialization"
-sudo service go-server start & >/dev/null 2>&1 
+sudo service go-server start >/dev/null 2>&1 &
 
+echo
 echo "While we wait, set up the git remote for the pipeline configuration"
 echo "First the Pull URL (must allow access without login, e.g. http(s)://my.git) : "
 prompt_with_default "$CONFIG_REMOTE_FIRST_PULL" "Pull URL"
+echo
 echo "Now the Push URL (must be an SSH login, e.g. user@my.git or ssh://user@my.git) : "
 prompt_with_default "$CONFIG_REMOTE_PUSH" "Push URL"
-
+echo
 echo "Finally the repo for custom commands (NOTE this also needs to be manually enabled in Go settings later)"
 prompt_with_default "$COMMANDS_REMOTE" "Commands Repo (could be PULL only, e.g. http)"
 
@@ -164,5 +165,5 @@ service go-server status
 echo "Try starting with"
 echo "sudo service go-server start"
 echo "otherwise with:"
-echo 'sudo -u go "/etc/init.d/go-server start"'
+echo 'sudo -u go /etc/init.d/go-server start'
 
