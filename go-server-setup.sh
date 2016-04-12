@@ -78,14 +78,22 @@ else
    echo
 fi
 
-echo "Starting go-server to make it create the directories etc."
+echo "Starting go-server to make it go through initialization"
 sudo service go-server start &
-echo "Initialization takes a while... waiting 15 seconds before continuing"
-echo -n "15.."
+echo "This can take quite a long a while but it should not be more than 30 seconds or so"
+echo -n "First waiting 15 secs..."
 sleep 1
 echo "14... have patience"
 sleep 14
-echo "Stopping go-server"
+
+echo Checking for directory /var/lib/go/config.git
+[ ! -d /var/lib/go/config.git ] && echo "still not there... waiting until I see it"
+while [ ! -d /var/lib/go/config.git ] ; do
+  echo -n "."
+  sleep 1
+done
+
+echo "OK, stopping go-server"
 sudo service go-server stop
 
 echo "Setting up a remote to push config file backups"
