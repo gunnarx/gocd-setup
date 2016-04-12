@@ -16,7 +16,7 @@ path=$(./download.sh server $version)
 #echo 'Creating "go" user'
 echo 'Creating gouser'
 sudo groupadd go --gid 1500
-sudo useradd go -g go -uid 1500 -d /var/go
+sudo useradd go -g go --uid 1500 -d /var/go
 sudo useradd gouser -g go --uid 1501 # For account creation
 #sudo chown -R go:go /home/go
 
