@@ -3,11 +3,11 @@
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo yum install -y java-1.7.0-openjdk unzip
+      sudo yum install -y unzip git
       ;;
    deb)
       sudo apt-get update
-      sudo apt-get install -y openjdk-7-jre unzip
+      sudo apt-get install -y unzip git
       ;;
    *)
       fail "Could not determine rpm/deb type?"

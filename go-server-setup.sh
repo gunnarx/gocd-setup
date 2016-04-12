@@ -10,8 +10,9 @@ fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1
 set -x
 path=$(./download.sh server $version)
 
-# Install Java (see script for version)
-./install-java.sh
+# Install Java (see script for version), and git and stuff
+#./install-java.sh
+#./install-prerequisites.sh
 
 type=$(./rpm-or-deb.sh)
 case $type in
@@ -45,7 +46,6 @@ sudo chown -R go:go /home/gouser
 
 sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
 sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
-
 
 javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
 java_home=/usr/lib/jvm/$javadir/jre
