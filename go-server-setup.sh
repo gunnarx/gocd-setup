@@ -96,13 +96,14 @@ done
 echo "OK, stopping go-server"
 sudo service go-server stop
 
+
 echo "Setting up a remote to push config file backups"
 CONFIG_REMOTE=git@github.com:genivigo/server-config-backup.git
 
 # SSH key may not yet be set up, so pull via HTTP this time
 CONFIG_REMOTE_PULL=http://github.com/genivigo/server-config-backup.git
 
-cd /var/lib/go-server/db/config.git || fail "config.git not yet created. (we didn't wait long enough?)"
+cd /var/lib/go-server/db/config.git || fail "config.git still not created. (we didn\'t wait long enough?)"
 sudo su go -c "git remote add backup $CONFIG_REMOTE" || fail "Adding backup git remote"
 sudo su go -c "git remote add first_pull $CONFIG_REMOTE_PULL" || fail "Adding backup git remote"
 sudo su go -c "git config push.default simple" || fail "git config push"
