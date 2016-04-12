@@ -13,6 +13,19 @@ path=$(./download.sh server $version)
 # Install Java (see script for version)
 ./install-java.sh
 
+type=$(./rpm-or-deb.sh)
+case $type in
+   rpm)
+      sudo rpm -iv $path || fail "RPM install failed"
+      ;;
+   deb)
+      sudo dpkg -i $path || fail "DEB install failed"
+      ;;
+   *)
+      fail "Could not determin rpm/deb type?"
+      ;;
+esac
+
 #echo 'Creating "go" user'
 echo 'Creating gouser'
 sudo groupadd go --gid 1500
