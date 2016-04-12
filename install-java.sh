@@ -5,11 +5,11 @@
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo yum install -y java-1.8.0-openjdk
+      sudo yum install -y java-1.7.0-openjdk
       ;;
    deb)
       sudo apt-get update
-      sudo apt-get install -y openjdk-8-jre
+      sudo apt-get install -y openjdk-7-jre
       ;;
    *)
       fail "Could not determin rpm/deb type?"
