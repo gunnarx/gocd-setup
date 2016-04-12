@@ -14,17 +14,18 @@ path=$(./download.sh server $version)
 ./install-java.sh
 
 #echo 'Creating "go" user'
-#sudo groupadd go --gid 1500
-#sudo useradd go -g go -uid 1500
 echo 'Creating gouser'
+sudo groupadd go --gid 1500
+sudo useradd go -g go -uid 1500 -d /var/go
 sudo useradd gouser -g go --uid 1501 # For account creation
-#sudo mkdir -p /home/go
 #sudo chown -R go:go /home/go
 
+sudo mkdir -p /var/log/go-server
+
+# (All these dirs should exist after deb/rpm installation)
 echo "Fixing install/log directories to be accessible for go user"
-sudo chown -R go:go /var/log/go-server || fail "Can't chown directories log"
-sudo chown -R go:go /var/lib/go-server || fail "Can't chown directories lib"
-sudo chown -R go:go /var/run/go-server || fail "Can't chown directories run"
+sudo chown -R go:go /var/{log,lib,run}/go-server /var/go || fail "Can't chown a directory"
+sudo chmod 755 /var/{log,lib,run}/go-server /var/go || fail "Can't chmod a directory"
 
 sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
 sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
