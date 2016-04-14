@@ -29,10 +29,11 @@ prompt_with_default() {
 
 fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
 
+echo Downloading go-server installation
 path=$(./download.sh server $version)
 
 # Install Java (see script for version), and git and stuff
-#./install-java.sh
+./install-java.sh
 ./install-prerequisites.sh
 
 type=$(./rpm-or-deb.sh)
