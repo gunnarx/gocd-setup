@@ -237,12 +237,12 @@ echo "Fixing install/log directories to be accessible for go user"
 sudo mkdir -m 755 -p /var/{log,lib,run}/go-server $GO_HOME_DIR || fail "Can't create /var/... directories"
 sudo chown -R go:go /var/{log,lib,run}/go-server $GO_HOME_DIR || fail "Can't chown a directory"
 
+echo Determining JAVA_HOME once again and adding to go-agent conf
+add_java_to_conf
 
 # --------------------------------------------------------------------------
 # Run server once to go through initialization
 # --------------------------------------------------------------------------
-
-add_java_to_conf
 
 echo
 echo "Starting go-server to make it go through initialization"
@@ -250,9 +250,9 @@ sudo service go-server start >/dev/null 2>&1 &
 
 echo "While we wait, set up the git remote for the pipeline configuration"
 
-prompt_for_git_urls  # <- this user interactive is useful to do while we wait for the long startup
+prompt_for_git_urls  # <- this user-interactive is useful to do while we wait for the long startup
 
-# By now the init should be done but loop until we see the config dir ready
+# Loop until we see the config dir ready
 echo
 echo Checking for directory $CRUISE_CONFIG_DIR
 echo "Note: Total waiting time should not be more than 30 seconds or so."
