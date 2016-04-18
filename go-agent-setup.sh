@@ -95,7 +95,7 @@ add_java_to_conf
 
 echo Go-agent is installed - NOTE: It will contact the go server
 echo at the defined address: GO_SERVER is set to:
-fgrep GO_SERVER= /tmp/newconf.$$
+fgrep GO_SERVER= /etc/default/go-agent
 
 echo
 echo Current Status:
