@@ -1,0 +1,17 @@
+#!/bin/sh -x
+
+# Just a helper script, you can probably ignore this
+
+what=server
+img=phusion/baseimage
+container=go-$what-test
+
+# Kill and re-run container
+docker rm -f gotest 2>&1
+docker run -ti --detach -p 8153:8153 --name $container $img /bin/bash
+
+# Copy scripts into container for testing
+# (I could share a volume instead, but I have not set up docker-machine for it to work)
+tar cf - --exclude='*.rpm' --exclude='*.deb' * | docker exec -i $container tar xvf -
+
+docker exec -ti $container /bin/bash ./go-$what-setup.sh
