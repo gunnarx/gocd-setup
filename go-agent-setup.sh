@@ -1,11 +1,13 @@
 #!/bin/sh
+
 # (C) 2015 Gunnar Andersson
-# License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
+# License: Your choice of GPLv2, GPLv3 or CC-BY-4.0
+# (https://creativecommons.org/licenses/by/4.0/)
 
 # ---------------------------------------------------------------------------
 # SETTINGS
 # ---------------------------------------------------------------------------
-version=16.3.0-3183
+VERSION=16.3.0-3183
 GO_HOME_DIR=/var/go
 
 # Normalize directory - make sure we start in "this" directory
@@ -49,7 +51,7 @@ EEE
 # ---------------------------------------------------------------------------
 # Download and install agent (helper script)
 # ---------------------------------------------------------------------------
-path=$(./download.sh agent $version)
+path=$(./download.sh agent $VERSION)
 
 # ---------------------------------------------------------------------------
 # Install Java, git and stuff.  N.B.: Java version is coded into helper script.
@@ -92,6 +94,11 @@ sudo cp go-agent.conf /etc/default/go-agent
 
 echo Determining JAVA_HOME once again and adding to go-agent conf
 add_java_to_conf
+
+# ---------------------------------------------------------------------------
+# Install useful packages for agent (needed for yocto build etc.)
+# ---------------------------------------------------------------------------
+./install_agent_build_prerequisites.sh
 
 echo Go-agent is installed - NOTE: It will contact the go server
 echo at the defined address: GO_SERVER is set to:
