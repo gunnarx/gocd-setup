@@ -7,11 +7,11 @@ img=gotest_java
 
 # Kill and re-run container
 docker rm -f gotest 2>&1
-docker run -ti --detach -p 8153:8153 --name gotest $img /bin/bash 
+docker run -ti --detach -p 8153:8153 --name gotest $img /bin/bash
 
 # Copy scripts into container for testing
 # (could share a volume instead, but I have not set up docker-machine for it to work)
 tar cf - --exclude='*.rpm' * | docker exec -i gotest tar xvf -
 
-echo "Hit return to attach" ; read
-docker attach gotest
+#echo "Hit return to attach" ; read
+docker exec -ti gotest /bin/bash ./go-server-setup.sh
