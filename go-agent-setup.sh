@@ -6,6 +6,7 @@
 # SETTINGS
 # ---------------------------------------------------------------------------
 version=16.3.0-3183
+GO_HOME_DIR=/var/go
 
 # Normalize directory - make sure we start in "this" directory
 D=$(dirname "$0")
@@ -89,6 +90,7 @@ sudo chown -R go:go /var/{log,lib,run}/go-agent $GO_HOME_DIR || fail "Can't chow
 echo Copying default conf to /etc/default/go-agent
 sudo cp go-agent.conf /etc/default/go-agent
 
+echo Determining JAVA_HOME once again and adding to go-agent conf
 add_java_to_conf
 
 echo Go-agent is installed - NOTE: It will contact the go server
