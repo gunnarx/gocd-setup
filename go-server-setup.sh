@@ -32,6 +32,11 @@ CONFIG_REMOTE_PUSH=git@github.com:genivigo/server-config-backup.git
 # https://github.com/gocd/go-command-repo
 COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
 
+# Normalize directory - make sure we start in "this" directory
+D=$(dirname "$0")
+cd "$D"
+MYDIR="$PWD"
+
 # ---------------------------------------------------------------------------
 # Function: Misc helpers
 # ---------------------------------------------------------------------------
@@ -75,9 +80,12 @@ add_java_to_conf() {
    export JAVA_HOME="$java_home"
    cat <<EEE >>/tmp/newconf.$$
    export JAVA_HOME="$java_home"
-   EEE
+EEE
 
+   # OK, put it back and just in case, fix up permissions and stuff
    sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
+   sudo chown root:root /etc/default/go-server
+   sudo chmod 644 /etc/default/go-server
 }
 
 # --------------------------------------------------------------------------
@@ -182,10 +190,10 @@ configure_commands_repo() {
 }
 
 
-# MAIN SCRIPT STARTING
+# MAIN SCRIPT STARTING -- server
 
 # ---------------------------------------------------------------------------
-# Download and install (helper script)
+# Download and install server (helper script)
 # ---------------------------------------------------------------------------
 echo Downloading go-server installation
 path=$(./download.sh server $VERSION)
@@ -265,6 +273,8 @@ setup_account_creation_application # <- optional
 configure_cruise_config_git_storage
 configure_commands_repo
 
+echo
+echo Current Status:
 service go-server status
 echo "Try starting with"
 echo "sudo service go-server start"
