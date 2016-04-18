@@ -36,11 +36,11 @@ COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
 # Function: Misc helpers
 # ---------------------------------------------------------------------------
 prompt_with_default() {
-  echo "Default is: $1"
-  echo "(Hit return to keep default value, or type none to disable)"
-  read -p "$2: " value
-  value=${value:-$1}
-  echo $value
+   echo "Default is: $1"
+   echo "(Hit return to keep default value, or type none to disable)"
+   read -p "$2: " value
+   value=${value:-$1}
+   echo $value
 }
 
 fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
@@ -64,20 +64,20 @@ setup_account_creation_application() {
 # and add it to the config file.
 
 add_java_to_conf() {
-  sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
-  sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
+   sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
+   sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
 
-  javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
-  java_home=/usr/lib/jvm/$javadir/jre
-  [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
-  [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
+   javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
+   java_home=/usr/lib/jvm/$javadir/jre
+   [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
+   [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
-  export JAVA_HOME="$java_home"
-  cat <<EEE >>/tmp/newconf.$$
-  export JAVA_HOME="$java_home"
-EEE
+   export JAVA_HOME="$java_home"
+   cat <<EEE >>/tmp/newconf.$$
+   export JAVA_HOME="$java_home"
+   EEE
 
-  sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
+   sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
 }
 
 # --------------------------------------------------------------------------
@@ -111,9 +111,9 @@ pull_config_from_existing_git() {
       sudo -u go git fetch first_pull || fail git fetch
       sudo -u go git reset first_pull/master --hard || fail git restore backup
       cd -
-  else
+   else
       echo "git pull URL for initial pipeline config was not configured -- skipping"
-  fi
+   fi
 }
 
 # ----------------------------------------------------------------
@@ -122,40 +122,40 @@ pull_config_from_existing_git() {
 # ----------------------------------------------------------------
 configure_cruise_config_git_storage() {
 
-  if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
+   if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
 
-    cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
-    sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
-    sudo -u go git config push.default simple || fail git config push
-    cd -
+      cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
+      sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
+      sudo -u go git config push.default simple || fail git config push
+      cd -
 
-    # Replace the actually used config (in /etc/go) with the one taken from backup
-    sudo cp cruise-config.xml /etc/go/
-    echo "Adding hourly crontab job to push config changes"
+      # Replace the actually used config (in /etc/go) with the one taken from backup
+      sudo cp cruise-config.xml /etc/go/
+      echo "Adding hourly crontab job to push config changes"
 
-    # Set up cron job for hourly backups
-    sudo install -m 755 ./go-config-cronjob.sh $CRONSCRIPTS/ || fail "Copying config cronscript"
+      # Set up cron job for hourly backups
+      sudo install -m 755 ./go-config-cronjob.sh $CRONSCRIPTS/ || fail "Copying config cronscript"
 
-    # Set up SSH key
-    if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
-      echo "SSH key exists -- skipping"
-    else
-      sudo -u go mkdir -p -m 700 $GO_HOME_DIR/.ssh  || fail "Creating .ssh dir"
-      sudo -u go ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N "" || fail "Creating ssh keys"
-      echo
-      echo "Here is the public key for git access -- add it to GitHub or your git server"
-      echo
-      echo "*** WARNING ***"
-      echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control accessindividually per repository, make sure to use an account for this purpose only."
-      echo "*** WARNING ***"
-      echo
-      cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"
-      echo
-    fi
+      # Set up SSH key
+      if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
+         echo "SSH key exists -- skipping"
+      else
+         sudo -u go mkdir -p -m 700 $GO_HOME_DIR/.ssh  || fail "Creating .ssh dir"
+         sudo -u go ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N "" || fail "Creating ssh keys"
+         echo
+         echo "Here is the public key for git access -- add it to GitHub or your git server"
+         echo
+         echo "*** WARNING ***"
+         echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control accessindividually per repository, make sure to use an account for this purpose only."
+         echo "*** WARNING ***"
+         echo
+         cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"
+         echo
+      fi
 
-  else
-    echo "git push URL for backups was not configured -- skipping"
-  fi
+   else
+      echo "git push URL for backups was not configured -- skipping"
+   fi
 
 }
 
@@ -164,21 +164,21 @@ configure_cruise_config_git_storage() {
 # (optional / not really required)
 # ----------------------------------------------------------------
 configure_commands_repo() {
-if [ "$COMMANDS_REMOTE" != "none" ] ; then
-   sudo mkdir -p "$COMMANDS_DIR" || fail "mkdir commands dir"
-   sudo chown go:go "$COMMANDS_DIR" || fail "chown commands dir"
-   sudo chmod 755 "$COMMANDS_DIR"   || fail "chmod commands dir"
-   pushd "$COMMANDS_DIR" || fail "cd commands dir"
+   if [ "$COMMANDS_REMOTE" != "none" ] ; then
+      sudo mkdir -p "$COMMANDS_DIR" || fail "mkdir commands dir"
+      sudo chown go:go "$COMMANDS_DIR" || fail "chown commands dir"
+      sudo chmod 755 "$COMMANDS_DIR"   || fail "chmod commands dir"
+      pushd "$COMMANDS_DIR" || fail "cd commands dir"
 
-    # Set up cron job for hourly updates, if command repo changes
-   sudo -u go git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
-   cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
-   popd
+      # Set up cron job for hourly updates, if command repo changes
+      sudo -u go git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
+      cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
+      popd
 
-   sudo install -m 755 ./go-command-cronjob.sh $CRONSCRIPTS/ || fail "Copying command cronscript"
- else
-   echo "git pull URL for commands repo was not configured -- skipping"
-fi
+      sudo install -m 755 ./go-command-cronjob.sh $CRONSCRIPTS/ || fail "Copying command cronscript"
+   else
+      echo "git pull URL for commands repo was not configured -- skipping"
+   fi
 }
 
 
@@ -250,8 +250,8 @@ echo Checking for directory $CRUISE_CONFIG_DIR
 echo "Note: Total waiting time should not be more than 30 seconds or so."
 [ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
 while [ ! -d $CRUISE_CONFIG_DIR ] ; do
-  echo -n "."
-  sleep 1
+   echo -n "."
+   sleep 1
 done
 
 echo "OK init is done.  Stopping go-server."
