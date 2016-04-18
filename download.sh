@@ -24,10 +24,9 @@ esac
 
 [ -z "$type" ] && fail "Couldn't figure out if rpm or deb is desired."
 
-file=go-server-${version}${arch}.${type}
+file=go-${variant}-${version}${arch}.${type}
 filehost="http://download.go.cd"
 fileurl="$filehost/binaries/${version}/${dir}/${file}"
-file=go-${variant}-${version}${arch}.${type}
 
 # The download URL seemed to require an actual web browser as agent
 # or something?  The redirect to the file fails otherwise.
