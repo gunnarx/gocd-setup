@@ -35,9 +35,8 @@ add_java_to_conf() {
    [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
    [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
 
-   export JAVA_HOME="$java_home"
    cat <<EEE >>/tmp/newconf.$$
-   export JAVA_HOME="$java_home"
+export JAVA_HOME="$java_home"
 EEE
 
    # OK, put it back and just in case, fix up permissions and stuff
