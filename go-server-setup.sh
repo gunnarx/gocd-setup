@@ -175,12 +175,13 @@ configure_commands_repo() {
       sudo mkdir -p "$COMMANDS_DIR" || fail "mkdir commands dir"
       sudo chown go:go "$COMMANDS_DIR" || fail "chown commands dir"
       sudo chmod 755 "$COMMANDS_DIR"   || fail "chmod commands dir"
-      pushd "$COMMANDS_DIR" || fail "cd commands dir"
 
       # Set up cron job for hourly updates, if command repo changes
+      D="$PWD"  # <- got some weird error with pushd/popd... hmm
+      cd "$COMMANDS_DIR" || fail "cd commands dir"
       sudo -u go git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
       cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
-      popd
+      cd "$D"
 
       sudo install -m 755 ./go-command-cronjob.sh $CRONSCRIPTS/ || fail "Copying command cronscript"
    else
@@ -253,7 +254,7 @@ prompt_for_git_urls  # <- this user-interactive is useful to do while we wait fo
 
 # Loop until we see the config dir ready
 echo
-echo Checking for directory $CRUISE_CONFIG_DIR
+echo "Checking for directories $CRUISE_CONFIG_DIR"
 echo "Note: Total waiting time should not be more than 30 seconds or so."
 [ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
 while [ ! -d $CRUISE_CONFIG_DIR ] ; do
@@ -263,6 +264,9 @@ done
 
 echo "OK init is done.  Stopping go-server."
 sudo service go-server stop
+
+# This seems like it's not being created by itself?
+sudo -u go mkdir -m 755 -p $COMMANDS_DIR
 
 # FIXME: This does not actually set up the application currently
 # it only creates the user and home dir...
