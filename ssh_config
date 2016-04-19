@@ -1,0 +1,8 @@
+# Set up a file like this to make sure your git server
+# is accessed by go using the right ssh-key
+Host github.com
+User git
+Hostname github.com
+PreferredAuthentications publickey
+IdentityFile /var/go/.ssh/id_rsa
+

@@ -177,6 +177,8 @@ configure_cruise_config_backup() {
          echo "*** WARNING ***"
          echo
          cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"
+
+         sudo -u go install -T -m 644 ./ssh_config $GO_HOME_DIR/.ssh/config
          echo
       fi
 
