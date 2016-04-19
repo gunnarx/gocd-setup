@@ -153,7 +153,7 @@ configure_cruise_config_git_storage() {
          echo "Here is the public key for git access -- add it to GitHub or your git server"
          echo
          echo "*** WARNING ***"
-         echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control accessindividually per repository, make sure to use an account for this purpose only."
+         echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control access individually per repository, make sure to use an account for this purpose only."
          echo "*** WARNING ***"
          echo
          cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"

@@ -27,7 +27,7 @@ RUN apt-get update ;\
 RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup
 
 # Run the actual provisioning script -
-RUN cd /tmp/gocd-setup && sh -x ./go-agent-setup.sh
+RUN cd /tmp/gocd-setup && ./go-agent-setup.sh
 
 # Clean up
 RUN apt-get clean ;\
