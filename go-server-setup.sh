@@ -14,6 +14,7 @@ CRUISE_CONFIG_DIR=/var/lib/go-server/db/config.git/
 COMMANDS_DIR=/var/lib/go-server/db/command_repository
 COMMANDS_DIR_NAME=genivi  # <- configurable, note it must ALSO be configured in GoCD
 CRONSCRIPTS=/etc/cron.hourly
+PASSWORD_FILE=/var/go/users
 
 # Optional: The following URLs should point to an external git repo to which we
 # will have the server push the config XML as a backup. This will be added as a
@@ -117,6 +118,27 @@ restore_cruise_config_from_backup() {
       sudo -u go git remote add first_pull $CONFIG_REMOTE_FIRST_PULL || fail Adding backup git remote
       sudo -u go git fetch first_pull || fail git fetch
       sudo -u go git reset first_pull/master --hard || fail git restore backup
+
+      # Is there a password file defined in config file?
+      # If so we reset it to a known location and start using that instead, less complicated that way.
+      if fgrep -q '<passwordFile path=' cruise-config.xml ; then
+
+         echo "WARNING:  Resetting password file location to $PASSWORD_FILE"
+         sed -i "s@passwordFile path=\".*\$@passwordFile path=\"$PASSWORD_FILE\" />@" cruise-config.xml
+
+         # Need to also store a password file assuming there was one.
+         echo
+         echo "Copying password file template"
+         echo
+         echo "WARNING: If users were defined in restored cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin"
+         echo
+         sudo -u go cp "$MYDIR/password_file_template" $PASSWORD_FILE || fail "Copying password file template"
+         sudo chown go:go $PASSWORD_FILE
+         sudo chmod 600 $PASSWORD_FILE
+      fi
+
+      # Replace the actually used config (in /etc/go) with the one taken from backup
+      sudo -u go cp "$CRUISE_CONFIG_DIR/cruise-config.xml" /etc/go/
       cd -
    else
       echo "git pull URL for initial pipeline config was not configured -- skipping"
@@ -135,8 +157,6 @@ configure_cruise_config_backup() {
       sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
       sudo -u go git config push.default simple || fail git config push
 
-      # Replace the actually used config (in /etc/go) with the one taken from backup
-      sudo -u go cp cruise-config.xml /etc/go/
       cd -
 
       # Set up cron job for hourly backups
