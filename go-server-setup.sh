@@ -109,7 +109,7 @@ prompt_for_git_urls() {
 # Recommended - Note: you may want to pull the initial setup from some git
 # even if you do not setup a writable git to store subsequent changes.
 # ----------------------------------------------------------------
-pull_config_from_existing_git() {
+restore_cruise_config_from_backup() {
 
    if [ "$CONFIG_REMOTE_FIRST_PULL" != "none" ] ; then
       echo "Getting initial pipeline setup from git repo"
@@ -127,7 +127,7 @@ pull_config_from_existing_git() {
 # Function: Configure a backup git repo to backup config file changes to
 # git (recommended)
 # ----------------------------------------------------------------
-configure_cruise_config_git_storage() {
+configure_cruise_config_backup() {
 
    if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
 
@@ -273,7 +273,8 @@ sudo -u go mkdir -m 755 -p $COMMANDS_DIR
 setup_account_creation_application # <- optional
 
 # Optional functions - comment them if you don't need them.
-configure_cruise_config_git_storage
+restore_cruise_config_from_backup
+configure_cruise_config_backup
 configure_commands_repo
 
 echo
