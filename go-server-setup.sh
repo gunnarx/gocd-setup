@@ -134,13 +134,13 @@ configure_cruise_config_backup() {
       cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
       sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
       sudo -u go git config push.default simple || fail git config push
-      cd -
 
       # Replace the actually used config (in /etc/go) with the one taken from backup
-      sudo cp cruise-config.xml /etc/go/
-      echo "Adding hourly crontab job to push config changes"
+      sudo -u go cp cruise-config.xml /etc/go/
+      cd -
 
       # Set up cron job for hourly backups
+      echo "Adding hourly crontab job to push config changes"
       sudo install -m 755 ./go-config-cronjob.sh $CRONSCRIPTS/ || fail "Copying config cronscript"
 
       # Set up SSH key
