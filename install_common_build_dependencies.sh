@@ -4,6 +4,7 @@
 PACKAGES_RPM="
      autoconf-
      automake
+     boost
      chrpath
      cmake
      diffstat
@@ -39,6 +40,7 @@ PACKAGES_DEB="
      gcc
      gcc-multilib
      git
+     libboost-dev
      libdbus-1-dev
      libdbus-c++-dev
      libexpat1-dev
