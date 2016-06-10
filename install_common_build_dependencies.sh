@@ -23,6 +23,7 @@ PACKAGES_RPM="
      pkgconfig
      python
      socat
+     systemd-devel
      texinfo
      unzip
      wget
@@ -47,6 +48,7 @@ PACKAGES_DEB="
      libexpat1-dev
      libfuse-dev
      libsdl1.2-dev
+     libsystemd-daemon-dev
      libtool
      make
      maven
