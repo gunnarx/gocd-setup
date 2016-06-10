@@ -8,6 +8,7 @@ PACKAGES_RPM="
      chrpath
      cmake
      diffstat
+     fuse-devel
      gawk
      gcc
      gcc-c++
@@ -22,6 +23,7 @@ PACKAGES_RPM="
      pkgconfig
      python
      socat
+     systemd-devel
      texinfo
      unzip
      wget
@@ -44,7 +46,9 @@ PACKAGES_DEB="
      libdbus-1-dev
      libdbus-c++-dev
      libexpat1-dev
+     libfuse-dev
      libsdl1.2-dev
+     libsystemd-daemon-dev
      libtool
      make
      maven
