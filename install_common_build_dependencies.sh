@@ -8,6 +8,7 @@ PACKAGES_RPM="
      chrpath
      cmake
      diffstat
+     fuse-devel
      gawk
      gcc
      gcc-c++
@@ -44,6 +45,7 @@ PACKAGES_DEB="
      libdbus-1-dev
      libdbus-c++-dev
      libexpat1-dev
+     libfuse-dev
      libsdl1.2-dev
      libtool
      make
