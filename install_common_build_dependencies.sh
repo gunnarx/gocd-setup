@@ -9,6 +9,7 @@ PACKAGES_RPM="
      cmake
      diffstat
      fuse-devel
+     intltool
      gawk
      gcc
      gcc-c++
@@ -42,6 +43,7 @@ PACKAGES_DEB="
      gcc
      gcc-multilib
      git
+     intltool
      libboost-dev
      libdbus-1-dev
      libdbus-c++-dev
