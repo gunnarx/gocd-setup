@@ -71,6 +71,7 @@ installer=
 
 case $installer in
    apt-get)
+      sudo $installer update
       sudo $installer install -y $PACKAGES_DEB
       ;;
    dnf|yum)
