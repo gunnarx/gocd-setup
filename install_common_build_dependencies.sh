@@ -8,6 +8,7 @@ PACKAGES_RPM="
      chrpath
      cmake
      diffstat
+     docbook-xsl
      fuse-devel
      intltool
      gawk
@@ -38,6 +39,7 @@ PACKAGES_DEB="
      chrpath
      cmake
      diffstat
+     docbook-xsl
      g++
      gawk
      gcc
