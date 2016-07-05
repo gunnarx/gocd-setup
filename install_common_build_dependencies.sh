@@ -1,24 +1,26 @@
 # These are typical packages needed for our builds.
 # Depending on your needs you can skip installing them...
 
+
+
 PACKAGES_RPM="
+     SDL-devel
      autoconf-
      automake
      boost
      chrpath
      cmake
+     dbus-c++-devel
+     dbus-devel
      diffstat
      docbook-xsl
+     expat-devel
      fuse-devel
-     intltool
      gawk
      gcc
      gcc-c++
      git
-     dbus-devel
-     dbus-c++-devel
-     expat-devel
-     SDL-devel
+     intltool
      libtool
      make
      maven
