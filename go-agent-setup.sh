@@ -48,15 +48,15 @@ EEE
 # MAIN SCRIPT STARTING -- agent
 
 # ---------------------------------------------------------------------------
-# Download and install agent (helper script)
-# ---------------------------------------------------------------------------
-path=$(./download.sh agent $VERSION)
-
-# ---------------------------------------------------------------------------
 # Install Java, git and stuff.  N.B.: Java version is coded into helper script.
 # ---------------------------------------------------------------------------
 ./install-java.sh
 ./install-prerequisites.sh
+
+# ---------------------------------------------------------------------------
+# Download and install agent (helper script)
+# ---------------------------------------------------------------------------
+path=$(./download.sh agent $VERSION)
 
 [ -f "$path" ] || fail "No go-agent installation archive found"
 
