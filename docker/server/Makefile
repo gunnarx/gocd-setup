@@ -5,8 +5,7 @@ build:
 	docker build --tag=genivi/go-server:latest .
 
 run:
-	docker run -d --name=go-server -p 8153-8154:8153-8154 -p 80:8153 -p 443:8154 genivi/go-server:latest
-	@echo "WARNING - THIS IS A TEST RUN, YOU REALLY WANT TO SET UP A PERSISTENT VOLUME!"
+	docker run -ti -d -v /gousers:/gousers -v /volumes/lv4_1500G/go-server-artifacts:/var/lib/go-server/artifacts --name=go-server2 -p 8153-8154:8153-8154 -p 104.227.2.123:80:8153 -p 104.227.2.123:443:8154 genivi/go-server:latest /sbin/my_init /bin/bash
 
 # Example, to map artifacts drive and specific IP
 #docker run -ti -d -v /gousers:/gousers -v /volumes/lv4_1500G/go-server-artifacts:/var/lib/go-server/artifacts --name=go-server2 -p 8153-8154:8153-8154 -p 104.227.2.123:80:8153 -p 104.227.2.123:443:8154 genivi/go-server:latest /sbin/my_init /bin/bash
@@ -29,4 +28,3 @@ stop:
 kill:
 	docker kill go-server
 	docker rm go-server
-
