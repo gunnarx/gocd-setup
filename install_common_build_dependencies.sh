@@ -10,6 +10,7 @@ PACKAGES_RPM="
      boost
      chrpath
      cmake
+     cpio
      dbus-c++-devel
      dbus-devel
      diffstat
@@ -40,6 +41,7 @@ PACKAGES_DEB="
      build-essential
      chrpath
      cmake
+     cpio
      diffstat
      docbook-xsl
      g++
