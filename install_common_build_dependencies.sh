@@ -11,6 +11,7 @@ PACKAGES_RPM="
      chrpath
      cmake
      cpio
+     curl
      dbus-c++-devel
      dbus-devel
      diffstat
@@ -42,6 +43,7 @@ PACKAGES_DEB="
      chrpath
      cmake
      cpio
+     curl
      diffstat
      docbook-xsl
      g++
