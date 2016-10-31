@@ -42,6 +42,10 @@ RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && 
 # Run the actual provisioning script -
 RUN cd /tmp/gocd-setup && ./go-server-setup.sh
 
+# Store OAUTH user/token used for Pull-Request plugin
+ADD .github /var/go/.github
+RUN chown go:go /var/go/.github ; chmod 700 /var/go/.github
+
 # Clean up
 RUN apt-get clean ;\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
