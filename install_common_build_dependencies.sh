@@ -58,7 +58,7 @@ PACKAGES_DEB="
      libexpat1-dev
      libfuse-dev
      libsdl1.2-dev
-     libsystemd-daemon-dev
+     libsystemd-dev
      libtool
      make
      maven
