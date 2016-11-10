@@ -11,8 +11,13 @@ the following is all that should be needed: (Please report any bugs)
 $ curl https://raw.githubusercontent.com/gunnarx/gocd-setup/master/go_agent_install.sh | bash
 ```
 
-
-There are scripts for the go-server as well:
+There are also scripts for the go-server, which are significantly more complex.
+If all bugs have been ironed out by now then you can do this to reinstall the server.
 ```bash
 $ curl https://raw.githubusercontent.com/gunnarx/gocd-setup/master/go_server_install.sh | bash
 ```
+
+Recommended to run agent and server in docker containers.  There are docker
+files in the docker/ subdirectory.
+
+Refer to docker/README.md for documentation on those.
