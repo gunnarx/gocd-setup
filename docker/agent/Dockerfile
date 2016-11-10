@@ -8,14 +8,14 @@
 # For design comments and rant, see server version instead.
 
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:latest
 
 MAINTAINER Gunnar Andersson <gand@acm.org>
 
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size down.
 RUN apt-get update ;\
-    apt-get install -y git ;\
+    apt-get install -y git sudo ;\
     apt-get clean ;\
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
