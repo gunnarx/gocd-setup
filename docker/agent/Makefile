@@ -5,8 +5,12 @@ build:
 	docker build --tag=genivi/go-agent:latest .
 
 run:
-	docker run -d --name=go-agent genivi/go-agent:latest
-	@echo "WARNING - THIS IS A TEST RUN, YOU LIKELY WANT TO SET UP A SEPARATE STORAGE VOLUME!"
+	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d --name=go-agent genivi/go-agent:latest || true
+	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d --name=go-agent genivi/go-agent:latest || true
+	@echo "docker run -h ${CONTAINER_HOSTNAME} -d --name=go-agent genivi/go-agent:latest"
+	@echo
+	@echo "WARNING - THIS IS A TEST RUN, RECOMMEND YOU MODIFY MAKEFILE TO ADD A STORAGE VOLUME!"
+	
 
 clean:
 	@echo "docker rm go-agent"
