@@ -1,4 +1,7 @@
-# These are typical packages needed for our builds. # Depending on your needs you can skip installing them...
+# These are typical packages needed for our builds.
+# Depending on your needs you can skip installing them...
+
+[ $(id -u) -eq 0 ] || { echo "Please make sure you run as root for installation" ; exit 1 ; }
 
 PACKAGES_RPM="
      SDL-devel
