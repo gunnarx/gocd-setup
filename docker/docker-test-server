@@ -4,7 +4,7 @@ what=server
 # Just a helper script, you can probably ignore this
 
 img=phusion/baseimage
-container="go-${what}-test"`
+container="go-${what}-test"
 
 D=$(dirname "$0")
 cd "$D"
