@@ -7,7 +7,7 @@
 # ---------------------------------------------------------------------------
 # SETTINGS
 # ---------------------------------------------------------------------------
-VERSION=16.3.0-3183
+VERSION=16.11.0-4185
 
 GO_HOME_DIR=/var/go
 CRUISE_CONFIG_DIR=/var/lib/go-server/db/config.git/
@@ -283,6 +283,7 @@ while [ ! -d $CRUISE_CONFIG_DIR ] ; do
    echo -n "."
    sleep 1
 done
+sleep 10
 
 echo "OK init is done.  Stopping go-server."
 sudo service go-server stop
