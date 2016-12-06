@@ -59,6 +59,7 @@ fail() { echo "Something went wrong - check script" 1>&2 ; echo "$@" 1>&2 ; exit
 # ---------------------------------------------------------------------------
 setup_account_creation_application() {
    echo 'Creating gouser for account-creation application'
+   sudo mkdir /home/gouser
    sudo useradd gouser -g go -d /home/gouser --uid 1501
    sudo chown -R go:go /home/gouser
 }
