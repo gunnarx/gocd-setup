@@ -31,9 +31,16 @@ run:
 	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
 	@echo "If you have no existing users, make sure the file is empty"
 	@echo 
+	@echo 'Go server seems to reset the password file location on first run - waiting 30 seconds and setting it to what we want.'
+	sleep 30
+	docker exec ${CONTAINER_NAME} sed -i 's@passwordFile path="/.*"@passwordFile path="${USERFILE_STORAGE}/users"@' /etc/go/cruise-config.xml
+	@echo
+	@echo 'OK it should be done.  If not, attach and check that passwordFile is set to ${USERFILE_STORAGE} in /etc/go/cruise-config.xml
+	@echo
 	@echo "To attach to the container, run:"
 	@echo "docker attach ${CONTAINER_NAME}"
 	@echo 'Then to leave the attached terminal, do not exit - use CTRL-P CTRL-Q!'
+	@echo
 
 clean:
 	@echo "docker rm ${CONTAINER_NAME}"

@@ -29,6 +29,7 @@ Variables:
 | CONTAINER_NAME | go-server | |
 | IMAGE_NAME | genivi/go-server | genivi/go-server:latest will be built |
 | GO_SERVER_IP | 127.0.0.1 | You should change this to the server's public IP address |
+| USERFILE_STORAGE | /gousers |  In this dir there is a single file named users containing hashed passwords |
 
 * Edit .github.readme (instructions inside)
 
@@ -61,8 +62,11 @@ Example:
 $ mkdir /go-artifacts
 $ chmod 777 /go-artifacts  # Lock down later by setting the user ID that matches the container's internal "go" user ID as owner
 ```
+* Make sure the path defined by $USERFILE_STORAGE exists
 
-* Run container
+* Copy an old file of hashed user password to /gousers/users (or equivalent if you changed $USERFILE_STORAGE dir)
+
+* *After* all of the above, run container:
 
 ```
 $ make run
