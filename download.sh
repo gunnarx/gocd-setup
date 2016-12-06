@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 [ "$#" -lt 2 ] &&  { echo "Usage: $0 <"agent" or "server">  <version>" ; exit 1 ; }
 
@@ -33,6 +33,7 @@ fileurl="$filehost/binaries/${version}/${dir}/${file}"
 # We need the download so here's an agent string...
 agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 
+echo Running Download $variant $version
 curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
