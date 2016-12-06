@@ -10,6 +10,8 @@ $ export CONTAINER_NAME=my_other_name
 ```
 Variables:
 
+| Name | Default value | Notes |
+|------|---------------|-------|
 | ARTIFACT_STORAGE | /go-artifacts-temp/ | This is a large disk location (host path) where artifacts volume will be # mapped to. |
 | CONTAINER_NAME | go-server | |
 | IMAGE_NAME | genivi/go-server | genivi/go-server:latest will be built |
