@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # (C) 2015 Gunnar Andersson
 # License: Your choice of GPLv2, GPLv3 or CC-BY-4.0
@@ -46,10 +46,10 @@ prompt_with_default() {
    echo "(Hit return to keep default value, or type none to disable)"
    read -p "$2: " value
    value=${value:-$1}
-   echo $value
+   echo "$value"
 }
 
-fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
+fail() { echo "Something went wrong - check script" 1>&2 ; echo "$@" 1>&2 ; exit 1 ; }
 
 # ---------------------------------------------------------------------------
 # Function: Account creation app needs "gouser" user.  
@@ -232,10 +232,10 @@ path=$(./download.sh server $VERSION)
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo rpm -iv $path || fail "RPM install failed"
+      sudo rpm -iv "$path" || fail "RPM install failed"
       ;;
    deb)
-      sudo dpkg -i $path || fail "DEB install failed"
+      sudo dpkg -i "$path" || fail "DEB install failed"
       ;;
    *)
       fail "Unsupported package type - fix script"

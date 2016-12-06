@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # (C) 2015 Gunnar Andersson
 # License: Your choice of GPLv2, GPLv3 or CC-BY-4.0
@@ -15,7 +15,7 @@ D=$(dirname "$0")
 cd "$D"
 MYDIR="$PWD"
 
-fail() { echo "Something went wrong - check script" 1>&2 ; echo $@ 1>&2 ; exit 1 ; }
+fail() { echo "Something went wrong - check script" 1>&2 ; echo "$@" 1>&2 ; exit 1 ; }
 
 
 # ---------------------------------------------------------------------------
@@ -66,10 +66,10 @@ path=$(./download.sh agent $VERSION)
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo rpm -iv $path || fail "RPM install failed"
+      sudo rpm -iv "$path" || fail "RPM install failed"
       ;;
    deb)
-      sudo dpkg -i $path || fail "DEB install failed"
+      sudo dpkg -i "$path" || fail "DEB install failed"
       ;;
    *)
       fail "Unsupported package type - fix script"
