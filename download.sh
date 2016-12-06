@@ -24,8 +24,12 @@ esac
 
 [ -z "$type" ] && fail "Couldn't figure out if rpm or deb is desired."
 
-file=go-${variant}-${version}${arch}.${type}
-filehost="http://download.go.cd"
+# WARNING go.cd seem to change these around a lot - the URL might break
+# and give the unfriendly message "access denied" instead of 404!
+# Tip - try "-" instead of "_" and remove "all"
+# Go to go.cd download page and figure it out...
+file=go-${variant}_${version}${arch}_all.${type}
+filehost="https://download.go.cd"
 fileurl="$filehost/binaries/${version}/${dir}/${file}"
 
 # The download URL seemed to require an actual web browser as agent
