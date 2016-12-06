@@ -33,7 +33,6 @@ fileurl="$filehost/binaries/${version}/${dir}/${file}"
 # We need the download so here's an agent string...
 agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 
-echo Running Download $variant $version
 curl=$(which curl)
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
@@ -44,4 +43,4 @@ else
 fi
 
 # If OK, report file path to caller
-[ -f "$PWD/$file" ] && echo "$PWD/$file"
+[ -f "$PWD/$file" ] && DL_PATH="$PWD/$file"

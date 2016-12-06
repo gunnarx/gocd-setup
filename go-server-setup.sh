@@ -221,7 +221,7 @@ configure_commands_repo() {
 # Download and install server (helper script)
 # ---------------------------------------------------------------------------
 echo Downloading go-server installation
-path=$(./download.sh server $VERSION)
+. ./download.sh server $VERSION # Sets $DL_PATH
 
 # ---------------------------------------------------------------------------
 # Install Java, git and stuff.  N.B.: Java version is coded into helper script.
@@ -235,10 +235,10 @@ path=$(./download.sh server $VERSION)
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo rpm -iv "$path" || fail "RPM install failed"
+      sudo rpm -iv "$DL_PATH" || fail "RPM install failed"
       ;;
    deb)
-      sudo dpkg -i "$path" || fail "DEB install failed"
+      sudo dpkg -i "$DL_PATH" || fail "DEB install failed"
       ;;
    *)
       fail "Unsupported package type - fix script"
