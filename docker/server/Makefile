@@ -2,6 +2,11 @@ default:
 	@echo "make [build|run|clean|logs|shell|stop|kill]"
 
 build:
+	@echo "VVVV"
+	@echo "NOTE - YOU MUST READ AND RENAME .github.readme first!"
+	@echo "Abort this (CTRL-C) if you have not (waiting 4 seconds...)"
+	@echo "^^^^"
+	@sleep 4
 	docker build --tag=genivi/go-server:latest .
 
 run:

@@ -1,0 +1,14 @@
+# The Dockerfile will look for a file named .github to be copied into the
+# container.  It includes credentials for the PR build plugin to report
+# results to GitHub.
+
+# If you wish to use this feature, remove all lines except the last two
+# below.  You should also need to replace the oauth token value with one
+# that is actually still active.  Otherwise the build will work, but
+# the GitHub integration will not...
+
+# Finally, after removing these lines - rename this file to .github and
+# then re-run the docker build.
+
+login = genivigo
+oauth = 21d92d2893cd157178fec145df9c5d3308984bba
