@@ -1,3 +1,18 @@
+GO_SERVER_IP ?= 127.0.0.1
+CONTAINER_NAME ?= go-server
+IMAGE_NAME ?= genivi/go-server
+
+# This is a large disk location (host path) where artifacts volume will be # mapped to
+# 1. Make sure it exists!
+# 2. Make sure the "go" user inside container can write to it on the host
+# (make it writable by all and then when uid is known you can create
+# limits)
+ARTIFACT_STORAGE ?= /go-artifacts-temp/
+
+# Recommend not changing this - it's easier to remember if the same
+# is used on host and in container.  The container uses /gousers
+USERFILE_STORAGE ?= /gousers
+
 default:
 	@echo "make [build|run|clean|logs|shell|stop|kill]"
 
@@ -7,29 +22,34 @@ build:
 	@echo "Abort this (CTRL-C) if you have not (waiting 4 seconds...)"
 	@echo "^^^^"
 	@sleep 4
-	docker build --tag=genivi/go-server:latest .
+	docker build --tag=${IMAGE_NAME}:latest .
+
 
 run:
-	docker run -ti -d -v /gousers:/gousers -v /volumes/lv4_1500G/go-server-artifacts:/var/lib/go-server/artifacts --name=go-server2 -p 8153-8154:8153-8154 -p 104.227.2.123:80:8153 -p 104.227.2.123:443:8154 genivi/go-server:latest /sbin/my_init /bin/bash
-
-# Example, to map artifacts drive and specific IP
-#docker run -ti -d -v /gousers:/gousers -v /volumes/lv4_1500G/go-server-artifacts:/var/lib/go-server/artifacts --name=go-server2 -p 8153-8154:8153-8154 -p 104.227.2.123:80:8153 -p 104.227.2.123:443:8154 genivi/go-server:latest /sbin/my_init /bin/bash
+	docker run -ti -d -v ${USERFILE_STORAGE}:/gousers -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 -p ${GO_SERVER_IP}:80:8153 -p ${GO_SERVER_IP}:443:8154 ${IMAGE_NAME}:latest /sbin/my_init /bin/bash
+	@echo
+	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
+	@echo "If you have no existing users, make sure the file is empty"
+	@echo 
+	@echo "To attach to the container, run:"
+	@echo "docker attach ${CONTAINER_NAME}"
+	@echo 'Then to leave the attached terminal, do not exit - use CTRL-P CTRL-Q!'
 
 clean:
-	@echo "docker rm go-server"
-	@docker rm go-server >/dev/null || echo "Container removed already"
-	@echo docker rmi genivi/go-server:latest 
-	@docker rmi genivi/go-server:latest 2>/dev/null || echo "Image removed already"
+	@echo "docker rm ${CONTAINER_NAME}"
+	@docker rm ${CONTAINER_NAME} >/dev/null || echo "Container removed already"
+	@echo docker rmi ${IMAGE_NAME}:latest 
+	@docker rmi ${IMAGE_NAME}:latest 2>/dev/null || echo "Image removed already"
 
 logs:
-	docker logs -f go-server
+	docker logs -f ${CONTAINER_NAME}
 
 shell:
-	docker exec -it go-server /bin/bash
+	docker exec -it ${CONTAINER_NAME} /bin/bash
 
 stop:
-	docker stop go-server
+	docker stop ${CONTAINER_NAME}
 
 kill:
-	docker kill go-server
-	docker rm go-server
+	docker kill ${CONTAINER_NAME} || docker rm ${CONTAINER_NAME}
+
