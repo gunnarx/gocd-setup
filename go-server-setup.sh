@@ -173,10 +173,10 @@ configure_cruise_config_backup() {
          sudo -u go mkdir -p -m 700 $GO_HOME_DIR/.ssh  || fail "Creating .ssh dir"
          sudo -u go ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N "" || fail "Creating ssh keys"
          echo
-         echo "Here is the public key for git access -- add it to GitHub or your git server"
+         echo "Here is the public key for git access -- add it to GitHub or your git server (read WARNING)"
          echo
          echo "*** WARNING ***"
-         echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control access individually per repository, make sure to use an account for this purpose only."
+         echo "*** WARNING *** The private key is stored without passphrase -  So unless you can control access individually per repository, make sure to use a separate Git account for this purpose only."
          echo "*** WARNING ***"
          echo
          cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"
