@@ -21,7 +21,7 @@
 # good base container, so let's start there.
 
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:latest
 
 MAINTAINER Gunnar Andersson <gand@acm.org>
 
