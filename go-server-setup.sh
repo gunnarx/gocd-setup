@@ -25,13 +25,15 @@ PASSWORD_FILE=/var/go/users
 # ... but for pushing the server must be configured with a writable URL (SSH)
 # (In theory these could point to different repos) <-- FIXME To be confirmed
 # does pushing to empty repo work?
-CONFIG_REMOTE_FIRST_PULL=http://github.com/genivigo/server-config-backup.git
-CONFIG_REMOTE_PUSH=git@github.com:genivigo/server-config-backup.git
+
+# If not set in environment already...
+[ -z "$CONFIG_REMOTE_FIRST_PULL" ] && CONFIG_REMOTE_FIRST_PULL=http://github.com/genivigo/server-config-backup.git
+[ -z "$CONFIG_REMOTE_PUSH" ] && CONFIG_REMOTE_PUSH=git@github.com:genivigo/server-config-backup.git
 
 # The second URL is intended to be a fork of the go-commands repo
-# not that important but you can read more at the main repo:
+# It's not that important but you can read more at the main repo:
 # https://github.com/gocd/go-command-repo
-COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
+[ -z "$COMMANDS_REMOTE" ] && COMMANDS_REMOTE=http://github.com/genivigo/go-command-repo.git
 
 # Normalize directory - make sure we start in "this" directory
 D=$(dirname "$0")
