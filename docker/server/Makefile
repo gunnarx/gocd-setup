@@ -35,16 +35,16 @@ run:
 	sleep 30
 	docker exec ${CONTAINER_NAME} sed -i 's@passwordFile path="/.*"@passwordFile path="${USERFILE_STORAGE}/users"@' /etc/go/cruise-config.xml
 	@echo
-	@echo 'OK it should be done.  If not, attach and check that passwordFile is set to ${USERFILE_STORAGE} in /etc/go/cruise-config.xml
+	@echo "OK it should be done.  If not, attach and check that passwordFile is set to ${USERFILE_STORAGE} in /etc/go/cruise-config.xml"
 	@echo
 	@echo "To attach to the container, run:"
 	@echo "docker attach ${CONTAINER_NAME}"
-	@echo 'Then to leave the attached terminal, do not exit - use CTRL-P CTRL-Q!'
+	@echo "Then to leave the attached terminal, do not exit - use CTRL-P CTRL-Q!"
 	@echo
 
 clean:
-	@echo "docker rm ${CONTAINER_NAME}"
-	@docker rm ${CONTAINER_NAME} >/dev/null || echo "Container removed already"
+	@echo "docker rm -v ${CONTAINER_NAME}"
+	@docker rm -v ${CONTAINER_NAME} >/dev/null || echo "Container removed already"
 	@echo docker rmi ${IMAGE_NAME}:latest 
 	@docker rmi ${IMAGE_NAME}:latest 2>/dev/null || echo "Image removed already"
 
@@ -59,4 +59,5 @@ stop:
 
 kill:
 	docker kill ${CONTAINER_NAME} || docker rm ${CONTAINER_NAME}
+	docker rm -v ${CONTAINER_NAME}
 
