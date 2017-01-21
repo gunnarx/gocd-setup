@@ -28,6 +28,7 @@ PACKAGES_RPM="
      maven
      pkgconfig
      python
+     python3
      socat
      systemd-devel
      texinfo
@@ -64,6 +65,7 @@ PACKAGES_DEB="
      maven
      pkg-config
      python
+     python3
      socat
      texinfo
      unzip
