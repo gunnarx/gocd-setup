@@ -18,7 +18,7 @@ default:
 
 build:
 	@echo "VVVV"
-	@echo "NOTE - YOU MUST READ AND RENAME .github.readme first!"
+	@echo "NOTE - YOU MUST READ AND RENAME .github.readthis first!"
 	@echo "Abort this (CTRL-C) if you have not (waiting 4 seconds...)"
 	@echo "^^^^"
 	@sleep 4
