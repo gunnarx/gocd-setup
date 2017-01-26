@@ -32,7 +32,7 @@ build:
 
 
 run:
-	docker run -ti -d -v ${USERFILE_STORAGE}:/gousers -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts -v ${PIPELINES_STORAGE}:/var/lib/go-server-pipelines --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 -p ${GO_SERVER_IP}:80:8153 -p ${GO_SERVER_IP}:443:8154 ${IMAGE_NAME}:latest /sbin/my_init /bin/bash
+	docker run -ti -d -v ${USERFILE_STORAGE}:/gousers -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 -p ${GO_SERVER_IP}:80:8153 -p ${GO_SERVER_IP}:443:8154 ${IMAGE_NAME}:latest /sbin/my_init /bin/bash
 	@echo
 	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
 	@echo "If you have no existing users, make sure the file is empty"
