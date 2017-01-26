@@ -7,7 +7,13 @@ IMAGE_NAME ?= genivi/go-server
 # 2. Make sure the "go" user inside container can write to it on the host
 # (make it writable by all and then when uid is known you can create
 # limits)
-ARTIFACT_STORAGE ?= /go-artifacts-temp/
+ARTIFACT_STORAGE ?= /mnt/go/go-server-artifacts
+
+# Same principle for pipelines (but they don't require quite as much
+# storage -- this is where the server clones the git repos to monitor
+# them for changes but build results are not here - they are on go *agents*
+# and in artifacts dir.
+PIPELINES_STORAGE ?= /mnt/go/go-server-pipelines
 
 # Recommend not changing this - it's easier to remember if the same
 # is used on host and in container.  The container uses /gousers
@@ -26,7 +32,7 @@ build:
 
 
 run:
-	docker run -ti -d -v ${USERFILE_STORAGE}:/gousers -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 -p ${GO_SERVER_IP}:80:8153 -p ${GO_SERVER_IP}:443:8154 ${IMAGE_NAME}:latest /sbin/my_init /bin/bash
+	docker run -ti -d -v ${USERFILE_STORAGE}:/gousers -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts -v ${PIPELINES_STORAGE}:/var/lib/go-server-pipelines --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 -p ${GO_SERVER_IP}:80:8153 -p ${GO_SERVER_IP}:443:8154 ${IMAGE_NAME}:latest /sbin/my_init /bin/bash
 	@echo
 	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
 	@echo "If you have no existing users, make sure the file is empty"
