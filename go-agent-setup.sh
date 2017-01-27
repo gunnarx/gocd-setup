@@ -56,7 +56,7 @@ EEE
 # ---------------------------------------------------------------------------
 # Download and install agent (helper script)
 # ---------------------------------------------------------------------------
-path=$(./download.sh agent $VERSION)
+. ./download.sh agent $VERSION
 
 [ -f "$DL_PATH" ] || fail "No go-agent installation archive found"
 
