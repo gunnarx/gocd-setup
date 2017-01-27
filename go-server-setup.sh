@@ -51,7 +51,7 @@ prompt_with_default() {
    echo "$value"
 }
 
-fail() { echo "Something went wrong - check script" 1>&2 ; echo "$@" 1>&2 ; exit 1 ; }
+fail() { echo "Something went wrong - check script" 1>&2 ; echo msg: "$@" 1>&2 ; exit 1 ; }
 
 # ---------------------------------------------------------------------------
 # Function: Account creation app needs "gouser" user.  
