@@ -58,7 +58,7 @@ EEE
 # ---------------------------------------------------------------------------
 path=$(./download.sh agent $VERSION)
 
-[ -f "$path" ] || fail "No go-agent installation archive found"
+[ -f "$DL_PATH" ] || fail "No go-agent installation archive found"
 
 # ---------------------------------------------------------------------------
 # Install the rpm/deb previously downloaded
