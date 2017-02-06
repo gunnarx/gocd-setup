@@ -34,13 +34,13 @@ RUN apt-get update ;\
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
-#ADD dummy /tmp/dummy
+ADD dummy /tmp/dummy
 
 # Fetch script git repo
 RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup
 
 # Run the actual provisioning script -
-RUN cd /tmp/gocd-setup && ./go-server-setup.sh
+RUN cd /tmp/gocd-setup && bash -x ./go-server-setup.sh
 
 # Store OAUTH user/token used for Pull-Request plugin
 ADD .github /var/go/.github

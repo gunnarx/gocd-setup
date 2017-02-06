@@ -56,9 +56,9 @@ EEE
 # ---------------------------------------------------------------------------
 # Download and install agent (helper script)
 # ---------------------------------------------------------------------------
-. ./download.sh agent $VERSION
+#. ./download.sh agent $VERSION
 
-[ -f "$DL_PATH" ] || fail "No go-agent installation archive found"
+#[ -f "$DL_PATH" ] || fail "No go-agent installation archive found"
 
 # ---------------------------------------------------------------------------
 # Install the rpm/deb previously downloaded
@@ -66,10 +66,25 @@ EEE
 type=$(./rpm-or-deb.sh)
 case $type in
    rpm)
-      sudo rpm -iv "$path" || fail "RPM install failed"
+      # Using yum repo instead:
+      echo "
+[gocd]
+name     = GoCD YUM Repository
+baseurl  = https://download.gocd.io
+enabled  = 1
+gpgcheck = 1
+gpgkey   = https://download.gocd.io/GOCD-GPG-KEY.asc
+" | sudo tee /etc/yum.repos.d/gocd.repo
+
+      sudo yum install -y go-agent
+      #sudo rpm -iv "$path" || fail "RPM install failed"
       ;;
    deb)
-      sudo dpkg -i "$path" || fail "DEB install failed"
+      echo "deb https://download.gocd.io /" | sudo tee /etc/apt/sources.list.d/gocd.list
+      curl https://download.gocd.io/GOCD-GPG-KEY.asc | sudo apt-key add -
+      sudo apt-get update
+      sudo apt-get install -y go-agent
+      #sudo dpkg -i "$path" || fail "DEB install failed"
       ;;
    *)
       fail "Unsupported package type - fix script"

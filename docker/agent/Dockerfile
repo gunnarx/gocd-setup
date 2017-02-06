@@ -38,6 +38,7 @@ EXPOSE 8153 8154
 
 # Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
 RUN sed -ie "s/DAEMON=Y/DAEMON=N/" /etc/default/go-agent
+RUN sed -ie "s/GO_SERVER=.*/GO_SERVER=38.101.164.233/" /etc/default/go-agent
 RUN mkdir /etc/service/go-agent
 ADD go-agent.runit.sh /etc/service/go-agent/run
 
