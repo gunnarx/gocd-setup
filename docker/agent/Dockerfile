@@ -15,7 +15,7 @@ MAINTAINER Gunnar Andersson <gand@acm.org>
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size down.
 RUN apt-get update ;\
-    apt-get install -y git sudo ;\
+    apt-get install -y git sudo telnet ;\
     apt-get clean ;\
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
@@ -24,10 +24,10 @@ RUN apt-get update ;\
 #ADD dummy /tmp/dummy
 
 # Fetch script git repo
-RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup
+RUN git clone http://github.com/gunnarx/gocd-setup.git -b devel /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup 
 
 # Run the actual provisioning script -
-RUN cd /tmp/gocd-setup && ./go-agent-setup.sh
+RUN cd /tmp/gocd-setup && bash -x ./go-agent-setup.sh
 
 # Clean up
 RUN apt-get clean ;\
