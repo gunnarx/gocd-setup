@@ -27,6 +27,7 @@ PACKAGES_RPM="
      make
      maven
      pkgconfig
+     pulseaudio-libs-devel
      python
      python3
      socat
@@ -58,6 +59,7 @@ PACKAGES_DEB="
      libdbus-c++-dev
      libexpat1-dev
      libfuse-dev
+     libpulse-dev
      libsdl1.2-dev
      libsystemd-dev
      libtool
