@@ -303,6 +303,17 @@ restore_cruise_config_from_backup
 configure_cruise_config_backup
 configure_commands_repo
 
+echo "NOTE:  Setting password file location to $PASSWORD_FILE"
+sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@' cruise-config.xml
+
+cd $MYDIR
+echo
+echo "Copying password file template"
+echo "WARNING: If users are defined in cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin"
+cp password_file_template $PASSWORD_FILE || fail "Copying password file template"
+sudo chown go:go $PASSWORD_FILE
+sudo chmod 600 $PASSWORD_FILE
+
 echo
 echo Current Status:
 service go-server status
