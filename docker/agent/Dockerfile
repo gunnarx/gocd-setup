@@ -33,9 +33,6 @@ RUN cd /tmp/gocd-setup && ./go-agent-setup.sh
 RUN apt-get clean ;\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Ports
-EXPOSE 8153 8154
-
 # Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
 RUN sed -ie "s/DAEMON=Y/DAEMON=N/" /etc/default/go-agent
 RUN mkdir /etc/service/go-agent
