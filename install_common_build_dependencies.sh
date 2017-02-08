@@ -1,5 +1,4 @@
-# These are typical packages needed for our builds.
-# Depending on your needs you can skip installing them...
+# These are typical packages needed for our builds. # Depending on your needs you can skip installing them...
 
 
 
@@ -7,6 +6,7 @@ PACKAGES_RPM="
      SDL-devel
      autoconf-
      automake
+     asciidoc
      boost
      chrpath
      cmake
@@ -41,6 +41,7 @@ PACKAGES_RPM="
 PACKAGES_DEB="
      automake
      autotools-dev
+     asciidoc
      build-essential
      chrpath
      cmake
