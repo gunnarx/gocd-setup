@@ -36,7 +36,7 @@ RUN apt-get clean ;\
 # Fix go-agent settings
 RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
     sed -ie 's!GO_SERVER=.*!GO_SERVER_URL=https://go.genivi.org:443/go!' /etc/default/go-agent ;\
-    sed -ie 's/export GO_SERVER/export GO_SERVER_URL/' /etc/default/go-agent
+    sed -ie 's/export GO_SERVER$/export GO_SERVER_URL/' /etc/default/go-agent
 
 # Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
 RUN mkdir /etc/service/go-agent
