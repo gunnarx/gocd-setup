@@ -13,8 +13,8 @@ build:
 	docker build --tag=genivi/go-agent:latest .
 
 run:
-	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/go/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
-	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/go/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
+	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
+	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
 	@echo "docker run -h ${CONTAINER_HOSTNAME} -d --name=go-agent genivi/go-agent:latest"
 	
 
