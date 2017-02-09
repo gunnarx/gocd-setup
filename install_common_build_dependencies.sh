@@ -16,12 +16,14 @@ PACKAGES_RPM="
      dbus-devel
      diffstat
      docbook-xsl
+     doxygen
      expat-devel
      fuse-devel
      gawk
      gcc
      gcc-c++
      git
+     graphviz
      intltool
      libtool
      make
@@ -31,6 +33,7 @@ PACKAGES_RPM="
      python
      python3
      socat
+     source-highlight
      systemd-devel
      texinfo
      unzip
@@ -49,11 +52,13 @@ PACKAGES_DEB="
      curl
      diffstat
      docbook-xsl
+     doxygen
      g++
      gawk
      gcc
      gcc-multilib
      git
+     graphviz
      intltool
      libboost-dev
      libdbus-1-dev
@@ -70,6 +75,7 @@ PACKAGES_DEB="
      python
      python3
      socat
+     source-highlight
      texinfo
      unzip
      wget
