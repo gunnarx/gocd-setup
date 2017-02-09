@@ -6,23 +6,39 @@
 # limits)
 PIPELINES_STORAGE ?= /mnt/go/go-agent-pipelines
 
+IMAGE_NAME ?= genivi/go-agent:latest
+CONTAINER_NAME ?= go-agent
+CONTAINER_NAME_VBOX ?= go-agent-vbox
+#CONTAINER_HOSTNAME ?= go-agent_docker
+#CONTAINER_HOSTNAME_VBOX ?- go-agent-vbox_docker
+
 default:
-	@echo "make [build|run|clean|logs|shell|stop|kill]"
+	@echo "make [build|build_vbox|run|run_vbox|clean|logs|shell|stop|kill]"
 
 build:
-	docker build --tag=genivi/go-agent:latest .
+	docker build --tag=${IMAGE_NAME}:latest .
 
 run:
-	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
-	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=go-agent genivi/go-agent:latest || true
-	@echo "docker run -h ${CONTAINER_HOSTNAME} -d --name=go-agent genivi/go-agent:latest"
-	
+	@echo "Running:  docker run <hostname setup> -d --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
+	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest || true
+	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest || true
+
+# Variant with Virtualbox installatino (needs Virtualbox installed and also the host vboxdrv mounted into container)
+build_vbox:
+	docker build -f Dockerfile.vbox --tag=${IMAGE_NAME}_vbox:latest .
+
+run_vbox:
+	@echo "Running:  docker run [hostname setup] -d --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest [with volumes -- see Makefile]"
+	@test -n "${CONTAINER_HOSTNAME_VBOX}" && docker run -h "${CONTAINER_HOSTNAME_VBOX}" -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest || true
+	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}:latest || true 
+
 
 clean:
-	@echo "docker rm go-agent"
-	@docker rm go-agent >/dev/null || echo "Container removed already"
-	@echo docker rmi genivi/go-agent:latest 
-	@docker rmi genivi/go-agent:latest 2>/dev/null || echo "Image removed already"
+	@echo "docker rm -v ${CONTAINER_NAME}"
+	@docker rm -v ${CONTAINER_NAME} >/dev/null || echo "Container removed already"
+	@echo docker rmi ${IMAGE_NAME}:latest 
+	@docker rmi ${IMAGE_NAME}:latest 2>/dev/null || echo "Image removed already"
+
 
 logs:
 	docker logs -f go-agent
