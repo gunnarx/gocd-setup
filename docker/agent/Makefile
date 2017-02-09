@@ -20,17 +20,17 @@ build:
 
 run:
 	@echo "Running:  docker run <hostname setup> -d --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
-	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest || true
-	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest || true
+	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
+	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 
-# Variant with Virtualbox installatino (needs Virtualbox installed and also the host vboxdrv mounted into container)
+# Variant with Virtualbox installation (needs Virtualbox installed and also the host vboxdrv mounted into container)
 build_vbox:
 	docker build -f Dockerfile.vbox --tag=${IMAGE_NAME}_vbox:latest .
 
 run_vbox:
 	@echo "Running:  docker run [hostname setup] -d --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest [with volumes -- see Makefile]"
-	@test -n "${CONTAINER_HOSTNAME_VBOX}" && docker run -h "${CONTAINER_HOSTNAME_VBOX}" -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest || true
-	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}:latest || true 
+	@test -n "${CONTAINER_HOSTNAME_VBOX}" && docker run -h "${CONTAINER_HOSTNAME_VBOX}" -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true
+	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true 
 
 
 clean:
