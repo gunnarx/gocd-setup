@@ -7,7 +7,10 @@ PACKAGES_RPM="
      autoconf-
      automake
      asciidoc
-     boost
+     boost-devel
+     boost-system
+     boost-thread
+     boost-log
      chrpath
      cmake
      cpio
@@ -61,6 +64,9 @@ PACKAGES_DEB="
      graphviz
      intltool
      libboost-dev
+     libboost-thread-dev
+     libboost-system-dev
+     libboost-log-dev
      libdbus-1-dev
      libdbus-c++-dev
      libexpat1-dev
