@@ -1,0 +1,54 @@
+# Go.cd agent install in Docker
+# NAME: genivi/go-agent
+#
+# (C) 2015 Gunnar Andersson
+# License: Your choice of GPLv2, GPLv3 or CC-BY-4.0
+# (https://creativecommons.org/licenses/by/4.0/)
+
+# For design comments and rant, see server version instead.
+
+# Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
+FROM phusion/baseimage:latest
+ENV VBOX_VERSION=virtualbox-5.0
+
+MAINTAINER Gunnar Andersson <gand@acm.org>
+
+# Need git to fetch the provisioning script, the rest is done by the script
+# Clean as much as possible before committing keeps the docker image size down.
+RUN apt-get update ;\
+    apt-get install -y git sudo ;\
+    apt-get clean ;\
+    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
+
+
+# Installing virtualbox (Ubuntu/Debian)
+RUN sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian '$(lsb_release -cs)' contrib non-free' > /etc/apt/sources.list.d/virtualbox.list" && \
+    curl -s http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add - && \
+    sudo apt-get update && sudo apt-get install $VBOX_VERSION
+
+# Touching a dummy file forces cache invalidation so
+# that git-clone is re-run.  Useful during development
+#ADD dummy /tmp/dummy
+
+# Fetch script git repo
+RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup
+
+# Run the actual provisioning script -
+RUN cd /tmp/gocd-setup && ./go-agent-setup.sh
+
+# Clean up
+RUN apt-get clean ;\
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Fix go-agent settings
+RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
+    sed -ie 's!GO_SERVER=.*!GO_SERVER_URL=https://go.genivi.org:443/go!' /etc/default/go-agent ;\
+    sed -ie 's/export GO_SERVER$/export GO_SERVER_URL/' /etc/default/go-agent
+
+# Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
+RUN mkdir /etc/service/go-agent
+ADD go-agent.runit.sh /etc/service/go-agent/run
+
+# Use baseimage-docker's init system as default command
+CMD ["/sbin/my_init"]
+

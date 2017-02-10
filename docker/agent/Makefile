@@ -6,7 +6,7 @@
 # limits)
 PIPELINES_STORAGE ?= /mnt/go/go-agent-pipelines
 
-IMAGE_NAME ?= genivi/go-agent:latest
+IMAGE_NAME ?= genivi/go-agent
 CONTAINER_NAME ?= go-agent
 CONTAINER_NAME_VBOX ?= go-agent-vbox
 #CONTAINER_HOSTNAME ?= go-agent_docker
@@ -19,7 +19,7 @@ build:
 	docker build --tag=${IMAGE_NAME}:latest .
 
 buildnew:
-	docker build --no-cache --tag=genivi/go-agent:latest .
+	docker build --no-cache --tag=${IMAGE_NAME}:latest .
 
 run:
 	@echo "Running:  docker run <hostname setup> -d --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
@@ -33,7 +33,7 @@ build_vbox:
 run_vbox:
 	@echo "Running:  docker run [hostname setup] -d --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest [with volumes -- see Makefile]"
 	@test -n "${CONTAINER_HOSTNAME_VBOX}" && docker run -h "${CONTAINER_HOSTNAME_VBOX}" -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true
-	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true 
+	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true 
 
 
 clean:
