@@ -18,6 +18,9 @@ default:
 build:
 	docker build --tag=${IMAGE_NAME}:latest .
 
+buildnew:
+	docker build --no-cache --tag=genivi/go-agent:latest .
+
 run:
 	@echo "Running:  docker run <hostname setup> -d --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
 	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
