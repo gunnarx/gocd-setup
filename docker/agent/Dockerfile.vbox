@@ -22,9 +22,10 @@ RUN apt-get update ;\
 
 
 # Installing virtualbox (Ubuntu/Debian)
-RUN sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian '$(lsb_release -cs)' contrib non-free' > /etc/apt/sources.list.d/virtualbox.list" && \
-    curl -s http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add - && \
-    sudo apt-get update && sudo apt-get install $VBOX_VERSION
+RUN echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib non-free" > /etc/apt/sources.list.d/virtualbox.list && \
+    curl -s http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | apt-key add - && \
+    apt-get update && \
+    apt-get install $VBOX_VERSION
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
