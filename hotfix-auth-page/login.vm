@@ -122,7 +122,7 @@
           </div>
         #end
         <div class='clear-both'><!-- Clear floats --></div>
-        <div id="graphic-dialog-container" style="padding-top:1px">
+        <div id="graphic-dialog-container" style="padding-top:400px">
           <div id="graphic-dialog" class="graphic-dialog-${edition.getDisplayType()}">
 
 <!-- PUT LOGO HERE TODO -->
