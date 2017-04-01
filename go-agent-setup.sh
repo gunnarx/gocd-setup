@@ -99,7 +99,7 @@ add_java_to_conf
 # Install useful packages for agent (needed for yocto build etc.)
 # ---------------------------------------------------------------------------
 ./install_common_build_dependencies.sh
- sudo install -m 755 ./go-agent-config-cronjob.sh $CRONSCRIPTS/ || fail "Copying agent config cronscript"
+ sudo install -m 755 ./go-agent-config-cronjob $CRONSCRIPTS/ || fail "Copying agent config cronscript"
 
 echo Go-agent is installed - NOTE: It will contact the go server
 echo at the defined address: GO_SERVER is set to:
