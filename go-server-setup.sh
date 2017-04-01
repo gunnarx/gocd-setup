@@ -164,7 +164,7 @@ configure_cruise_config_backup() {
 
       # Set up cron job for hourly backups
       echo "Adding hourly crontab job to push config changes"
-      sudo install -m 755 ./go-config-cronjob.sh $CRONSCRIPTS/ || fail "Copying config cronscript"
+      sudo install -m 755 ./go-config-cronjob $CRONSCRIPTS/ || fail "Copying config cronscript"
 
       # Set up SSH key
       if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
@@ -208,7 +208,7 @@ configure_commands_repo() {
       cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
       cd "$D"
 
-      sudo install -m 755 ./go-command-cronjob.sh $CRONSCRIPTS/ || fail "Copying command cronscript"
+      sudo install -m 755 ./go-command-cronjob $CRONSCRIPTS/ || fail "Copying command cronscript"
    else
       echo "git pull URL for commands repo was not configured -- skipping"
    fi
