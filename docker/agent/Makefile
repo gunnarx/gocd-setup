@@ -10,7 +10,7 @@ IMAGE_NAME ?= genivi/go-agent
 CONTAINER_NAME ?= go-agent
 CONTAINER_NAME_VBOX ?= go-agent-vbox
 #CONTAINER_HOSTNAME ?= go-agent_docker
-#CONTAINER_HOSTNAME_VBOX ?- go-agent-vbox_docker
+#CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox_docker
 
 default:
 	@echo "make [build|build_vbox|run|run_vbox|clean|logs|shell|stop|kill]"
