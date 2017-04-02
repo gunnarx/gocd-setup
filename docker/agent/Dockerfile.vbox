@@ -22,11 +22,12 @@ RUN apt-get update ;\
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
 
-# Installing virtualbox (Ubuntu/Debian)
+# Installing virtualbox & vagrant (Ubuntu/Debian) 
 RUN echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib non-free" > /etc/apt/sources.list.d/virtualbox.list && \
     curl -s $SIGNING_KEY_DOWNLOAD  | apt-key add - && \
     apt-get update && \
-    apt-get install -y $VBOX_VERSION
+    apt-get install -y $VBOX_VERSION && \
+    apt-get install -y vagrant
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
