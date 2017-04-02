@@ -10,6 +10,7 @@
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
 FROM phusion/baseimage:latest
 ENV VBOX_VERSION=virtualbox-5.0
+ENV SIGNING_KEY_DOWNLOAD=https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
 MAINTAINER Gunnar Andersson <gand@acm.org>
 
@@ -23,7 +24,7 @@ RUN apt-get update ;\
 
 # Installing virtualbox (Ubuntu/Debian)
 RUN echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib non-free" > /etc/apt/sources.list.d/virtualbox.list && \
-    curl -s http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | apt-key add - && \
+    curl -s $SIGNING_KEY_DOWNLOAD  | apt-key add - && \
     apt-get update && \
     apt-get install $VBOX_VERSION
 
