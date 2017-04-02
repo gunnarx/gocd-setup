@@ -1,7 +1,5 @@
 # These are typical packages needed for our builds. # Depending on your needs you can skip installing them...
 
-
-
 PACKAGES_RPM="
      SDL-devel
      autoconf-
@@ -44,49 +42,10 @@ PACKAGES_RPM="
      xterm
 "
 
-PACKAGES_DEB="
-     automake
-     autotools-dev
-     asciidoc
-     build-essential
-     chrpath
-     cmake
-     cpio
-     curl
-     diffstat
-     docbook-xsl
-     doxygen
-     g++
-     gawk
-     gcc
-     gcc-multilib
-     git
-     graphviz
-     intltool
-     libboost-dev
-     libboost-thread-dev
-     libboost-system-dev
-     libboost-log-dev
-     libdbus-1-dev
-     libdbus-c++-dev
-     libexpat1-dev
-     libfuse-dev
-     libpulse-dev
-     libsdl1.2-dev
-     libsystemd-dev
-     libtool
-     make
-     maven
-     pkg-config
-     python
-     python3
-     socat
-     source-highlight
-     texinfo
-     unzip
-     wget
-     xterm
-"
+# Debian/Ubuntu - these are constantly updated by a cronjob in
+# the docker-based agent setup at least.
+# Let's reuse the same single source for that package list!
+PACKAGES_DEB=" $(cat common_build_dependencies) "
 
 installer=
 [ -x "$(which apt-get 2>/dev/null)" ] && installer=apt-get
