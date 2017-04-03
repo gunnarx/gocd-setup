@@ -10,7 +10,7 @@
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
 FROM phusion/baseimage:latest
 
-MAINTAINER Gunnar Andersson <gand@acm.org>
+LABEL maintainer "Gunnar Andersson <gand@acm.org>"
 
 ENV GO_SERVER="go.genivi.org"
 
