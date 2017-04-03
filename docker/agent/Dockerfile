@@ -24,10 +24,10 @@ RUN apt-get update ;\
 #ADD dummy /tmp/dummy
 
 # Fetch script git repo
-RUN git clone http://github.com/genivigo/gocd-setup.git /tmp/gocd-setup 2>&1 && ls /tmp/gocd-setup
+RUN git clone http://github.com/genivigo/gocd-setup.git /root/gocd-setup 2>&1 && ls /root/gocd-setup
 
 # Run the actual provisioning script -
-RUN cd /tmp/gocd-setup && ./go-agent-setup.sh
+RUN cd /root/gocd-setup && ./go-agent-setup.sh
 
 # Clean up
 RUN apt-get clean ;\
