@@ -24,7 +24,7 @@ buildnew:
 run:
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
 	@test -n "${CONTAINER_HOSTNAME}" && docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
-	@test -z "${CONTAINER_HOSTNAME}" && echo "No ${CONTAINER_HOSTNAME} defined -> random" && docker run -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
+	@test -z "${CONTAINER_HOSTNAME}" && echo 'No ${CONTAINER_HOSTNAME} defined -> random hostname' && docker run -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 
 # Variant with Virtualbox installation (needs Virtualbox installed and also the host vboxdrv mounted into container)
 build_vbox:
@@ -33,7 +33,7 @@ build_vbox:
 run_vbox:
 	@echo "Running:  docker run [hostname setup] -d -ti --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest [with volumes -- see Makefile]"
 	@test -n "${CONTAINER_HOSTNAME_VBOX}" && docker run -h "${CONTAINER_HOSTNAME_VBOX}" -d -ti -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true
-	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo "No ${CONTAINER_HOSTNAME_VBOX} defined -> random" && docker run -d -ti -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true 
+	@test -z "${CONTAINER_HOSTNAME_VBOX}" && echo 'No \${CONTAINER_HOSTNAME_VBOX} defined -> random hostname' && docker run -d -ti -v /dev/vboxdrv:/dev/vboxdrv -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" --name=${CONTAINER_NAME_VBOX} ${IMAGE_NAME}_vbox:latest /sbin/my_init /bin/bash || true 
 
 
 clean:
