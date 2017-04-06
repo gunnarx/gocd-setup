@@ -33,6 +33,7 @@ automake
      pkg-config
      python
      python3
+     qemu-user
      socat
      source-highlight
      texinfo
