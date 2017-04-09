@@ -1,2 +1,7 @@
-#! /bin/sh
-cd ~/gocd-setup && /usr/bin/git pull && apt-get install -y $(cat common_build_dependencies)
+#!/bin/bash -e
+
+cd ~/gocd-setup
+/usr/bin/git config user.name "Cron $HOSTNAME"
+/usr/bin/git config user.email "noemail"
+/usr/bin/git pull
+/usr/bin/apt-get install $(cat common_build_dependencies)
