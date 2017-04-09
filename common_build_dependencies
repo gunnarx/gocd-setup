@@ -40,3 +40,4 @@ automake
      unzip
      wget
      xterm
+-qemu-user
