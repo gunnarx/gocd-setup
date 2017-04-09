@@ -5,4 +5,4 @@ cd ~/gocd-setup
 /usr/bin/git config user.email "noemail"
 /usr/bin/git fetch
 git reset origin/master --hard
-/usr/bin/apt-get install $(cat common_build_dependencies)
+/usr/bin/apt-get install -y $(cat common_build_dependencies)

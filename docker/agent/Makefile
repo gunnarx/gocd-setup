@@ -7,7 +7,7 @@
 PIPELINES_STORAGE ?= /mnt/go/go-agent-pipelines
 
 IMAGE_NAME ?= genivi/go-agent
-CONTAINER_NAME ?= go-agent
+CONTAINER_NAME ?= go-agent_new
 CONTAINER_NAME_VBOX ?= go-agent-vbox
 #CONTAINER_HOSTNAME ?= go-agent_docker
 #CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox_docker
