@@ -26,7 +26,6 @@ libexpat1-dev
 libfuse-dev
 libpulse-dev
 libsdl1.2-dev
-libsdl2-dev
 libsystemd-dev
 libtool
 make
@@ -41,3 +40,4 @@ unzip
 wget
 xterm
 -qemu-user
+-libsdl2
