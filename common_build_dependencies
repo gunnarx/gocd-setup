@@ -16,6 +16,7 @@ gcc-multilib
 git
 graphviz
 intltool
+iputils-ping
 libboost-dev
 libboost-thread-dev
 libboost-system-dev
