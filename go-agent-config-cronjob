@@ -1,6 +1,10 @@
-#!/bin/bash -e
+#!/bin/bash
 
-cd ~/gocd-setup
+d=/var/go/gocd-setup
+[ -d "$d" ] || git clone https://github.com/genivigo/gocd-setup "$d"
+
+set -e
+cd "$d"
 /usr/bin/git config user.name "Cron $HOSTNAME"
 /usr/bin/git config user.email "noemail"
 /usr/bin/git fetch
