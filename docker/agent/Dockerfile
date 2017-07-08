@@ -14,6 +14,9 @@ LABEL maintainer "Gunnar Andersson <gand@acm.org>"
 
 ENV GO_SERVER="go.genivi.org"
 
+# Location of yocto cache for downloads/sstate inside container
+ENV YOCTO_CACHE=/var/cache/yocto
+
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size down.
 RUN apt-get update ;\
@@ -41,7 +44,8 @@ RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
     sed -ie 's/export GO_SERVER$/export GO_SERVER_URL/' /etc/default/go-agent
 
 # Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
-RUN mkdir /etc/service/go-agent
+# and other needed dirs
+RUN mkdir -p /etc/service/go-agent "$YOCTO_CACHE"
 ADD go-agent.runit.sh /etc/service/go-agent/run
 
 # Use baseimage-docker's init system as default command
