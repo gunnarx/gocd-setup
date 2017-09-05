@@ -34,6 +34,11 @@ RUN git clone http://github.com/genivigo/gocd-setup.git /root/gocd-setup 2>&1 &&
 # Run the actual provisioning script -
 RUN cd /root/gocd-setup && ./go-agent-setup.sh
 
+# Not sure why this isn't being run on first install..  Anyway let's try
+# running it explicitly from here.  If the script is there it should work,
+# if not the docker build will fail, which is good so we know.
+RUN /etc/cron.hourly/go-agent-config-cronjob
+
 # Clean up
 RUN apt-get clean ;\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
