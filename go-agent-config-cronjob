@@ -9,6 +9,7 @@ cd "$d"
 /usr/bin/git config user.email "noemail"
 /usr/bin/git fetch
 git reset origin/master --hard
+export DEBIAN_FRONTEND=noninteractive
 /usr/bin/apt-get update
 /usr/bin/apt-get install -y $(cat common_build_dependencies | egrep -v '^-')
 # Packages prefixed with "-" will be removed

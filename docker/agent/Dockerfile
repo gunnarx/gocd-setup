@@ -37,6 +37,7 @@ RUN cd /root/gocd-setup && ./go-agent-setup.sh
 # Not sure why this isn't being run on first install..  Anyway let's try
 # running it explicitly from here.  If the script is there it should work,
 # if not the docker build will fail, which is good so we know.
+ENV DEBIAN_FRONTEND=noninteractive
 RUN /etc/cron.hourly/go-agent-config-cronjob
 
 # Clean up

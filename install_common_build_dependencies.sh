@@ -55,6 +55,7 @@ installer=
 
 case $installer in
    apt-get)
+      export DEBIAN_FRONTEND=noninteractive
       sudo $installer update
       sudo $installer install -y $PACKAGES_DEB
       ;;
