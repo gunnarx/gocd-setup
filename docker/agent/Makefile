@@ -24,7 +24,8 @@ buildnew:
 
 run:
 	sudo mkdir -p "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
-	sudo chmod 777 "${YOCTO_CACHE}"
+	# Make writable, because we don't know the uid of go user.  Better fix this inside of container later.
+	sudo chmod 777 "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
 	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 

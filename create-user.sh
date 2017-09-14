@@ -6,8 +6,7 @@
 # Once I found that go-server installer created the go user but go-agent 
 # installer did not?
 
-# Not sure if this is needed any longer and it depends on if it is done already.
-# Leaving it here just in case...
+# Now used by docker/agent/Dockerfile
 
 [ $(id -u) -eq 0 ] || { echo "Please make sure you run as root to create users" ; exit 1 ; }
 
