@@ -1,16 +1,31 @@
-# This should be a large disk location (host path) where build sandboxes are
-# stored, i.e. all intermediate and final build files!
-# 1. Make sure it exists!
-# 2. Make sure the "go" user inside container can write to it on the host
-# (make it writable by all and then when uid is known you can create
-# limits)
-PIPELINES_STORAGE ?= /mnt/go-agent-pipelines
+# ---------------------------------------------------------------------
+#  --- SETTINGS ---
+#
+#  (These can also be passed via the environment)
+
+# The pipelines storage should be a large disk location (host path) where
+# build sandboxes are stored, i.e. all intermediate and final build files!
+# We need to make sure it exist, and that the "go" user inside the
+# container can write to it.  For now this is done automatically below -
+# making it writable for all.  Once you know the uid of the container user,
+# you could limit the user if you wish.
+PIPELINES_STORAGE ?= /home/go/go-agent-pipelines
+
+# Set a unique name here
+CONTAINER_HOSTNAME ?= yournamehere-go-agent
+
+# This is the default location. If you can place it on SSD (~120GB) then
+# that's an even better option - otherwise just leave it.
 YOCTO_CACHE ?= ${PIPELINES_STORAGE}/__yocto_cache
 
+# ---------------------------------------------------------------------
+#  Other settings, normally not changed
+
 IMAGE_NAME ?= genivi/go-agent
-CONTAINER_NAME ?= go-agent-my
+CONTAINER_NAME ?= genivi-go-agent
+
+# This is a special version of the agent - you can ignore it for now.
 CONTAINER_NAME_VBOX ?= go-agent-vbox
-CONTAINER_HOSTNAME ?= go-agent
 CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox
 
 default:
