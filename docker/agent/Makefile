@@ -2,13 +2,16 @@
 #  --- SETTINGS ---
 #
 #  (These can also be passed via the environment)
-
+#
+# NOTE: For SELinux (Fedora, etc) also remember to uncomment the chcon line below!!
+#
 # The pipelines storage should be a large disk location (host path) where
 # build sandboxes are stored, i.e. all intermediate and final build files!
 # We need to make sure it exist, and that the "go" user inside the
 # container can write to it.  For now this is done automatically below -
 # making it writable for all.  Once you know the uid of the container user,
 # you could limit the user if you wish.
+
 PIPELINES_STORAGE ?= /home/go/go-agent-pipelines
 
 # Set a unique name here
@@ -41,6 +44,8 @@ run:
 	sudo mkdir -p "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	# Make writable, because we don't know the uid of go user.  Better fix this inside of container later.
 	sudo chmod 777 "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
+	# Uncomment and run the chcon if running Fedora or other selinux enabled system! Otherwise, there's no write access
+	#sudo chcon -Rt svirt_sandbox_file_t "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
 	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 
