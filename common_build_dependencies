@@ -48,3 +48,7 @@ ninja-build
 libzstd-dev
 libacl1-dev
 liblzma-dev
+libcurl3-dev
+libssl-dev
+
+

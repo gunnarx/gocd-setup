@@ -126,7 +126,7 @@
           <div id="graphic-dialog" class="graphic-dialog-${edition.getDisplayType()}">
 
 <!-- PUT LOGO HERE TODO -->
-<img src="/go/assets/plugins/images/genivi_chrome_1_transparent.png" height="100" width="100"> 
+<img src="/go/assets/plugins/images/genivi_chrome_1_transparent.png" height="100" width="100"/> 
 <p>
 <br/>
 <p/>
@@ -145,10 +145,10 @@
                          type="text"/>
                 </p>
 
-<p>  I am a guest!  Let me in! :-)
-<br/>
-<br/>  => Currently the login page cannot be removed but please try username &nbsp;&nbsp;<b>guest</b>&nbsp;&nbsp;   and password &nbsp;&nbsp;<b>genivigo</b>&nbsp;&nbsp;   for read-access.  <b>Welcome!</b> </p>
-
+<h3>
+<p/>
+Guest?  => Currently the login page cannot be removed but please try username &nbsp;&nbsp;<b>guest</b>&nbsp;&nbsp;   and password &nbsp;&nbsp;<b>genivigo</b>&nbsp;&nbsp;   for read-access.  Welcome!  <br/>Or <a href="https://at.projects.genivi.org/wiki/display/TOOL/User+Account+for+Go+server"><b>get a personal account</b></a>.</p>
+</h3>
  
                 <p>
                   <label for="user_password">$l.localize("PASSWORD")</label>
@@ -156,8 +156,7 @@
                          value="" autocomplete="off"/>
                 </p>
 
-<p> If you want to manage a build pipeline for automotive software here, you are welcome to request a personal account.  
-<br/>(<a href="https://at.projects.genivi.org/wiki/display/TOOL/User+Account+for+Go+server"><b>CLICK HERE</b></a> for instructions on the GENIVI Wiki)
+<p> If you want to manage a build pipeline for automotive software here, you are welcome to request a personal account.  <br/>(<a href="https://at.projects.genivi.org/wiki/display/TOOL/User+Account+for+Go+server"><b>Instructions here</b></a>)
 
                 <p id="login-actions">
                   <a target="_blank" href="https://gocd.io/help"
