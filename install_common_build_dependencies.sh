@@ -2,44 +2,63 @@
 
 PACKAGES_RPM="
      SDL-devel
-     autoconf-
-     automake
      asciidoc
+     autoconf
+     automake
      boost-devel
+     boost-log
      boost-system
      boost-thread
-     boost-log
+     bzip2
+     ccache
      chrpath
      cmake
      cpio
+     cpp
      curl
      dbus-c++-devel
      dbus-devel
      diffstat
+     diffutils
      docbook-xsl
      doxygen
      expat-devel
+     file
+     findutils
      fuse-devel
      gawk
      gcc
      gcc-c++
      git
+     glibc-devel
      graphviz
+     gzip
      intltool
      libtool
      make
      maven
+     patch
+     perl
+     perl-Data-Dumper
+     perl-Text-ParseWords
+     perl-Thread-Queue
+     perl-bignum
      pkgconfig
      pulseaudio-libs-devel
      python
      python3
+     python3-pexpect
+     python3-pip
      socat
      source-highlight
      systemd-devel
+     tar
      texinfo
      unzip
      wget
+     which
      xterm
+     xz
 "
 
 # Debian/Ubuntu - these are constantly updated by a cronjob in
