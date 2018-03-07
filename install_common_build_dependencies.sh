@@ -92,8 +92,10 @@ osrelease=/etc/os-release
 fgrep -q Ubuntu $osrelease && fgrep -q 14.04 $osrelease && sudo apt-get install libsystemd-daemon-dev
 fgrep -q Ubuntu $osrelease && fgrep -q 16.04 $osrelease && sudo apt-get install libsystemd-dev
 # FIXME - not sure which version needs what here...
-fgrep -q Debian $osrelease && sudo apt-get install libsystemd-daemon-dev || {
-   echo "Failed?  Not sure on systemd package name, but no problem - trying another:"
-   sudo apt-get install libsystemd-dev
+if fgrep -q Debian $osrelease ; then
+  sudo apt-get install libsystemd-daemon-dev || {
+    echo "Failed?  Not sure on systemd package name, but no problem - trying another:"
+  sudo apt-get install libsystemd-dev
 }
+fi
 
