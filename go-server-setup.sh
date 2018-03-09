@@ -308,8 +308,8 @@ sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@' cru
 
 cd $MYDIR
 echo
-echo "Copying password file template"
-echo "WARNING: If users are defined in cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin"
+echo 'Copying password file template'
+echo 'WARNING: If users are defined in cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin'
 cp password_file_template $PASSWORD_FILE || fail "Copying password file template"
 sudo chown go:go $PASSWORD_FILE
 sudo chmod 600 $PASSWORD_FILE
