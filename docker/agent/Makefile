@@ -65,15 +65,15 @@ clean:
 
 
 logs:
-	docker logs -f go-agent
+	docker logs -f ${CONTAINER_NAME}
 
 shell:
-	docker exec -it go-agent /bin/bash
+	docker exec -it ${CONTAINER_NAME} /bin/bash
 
 stop:
-	docker stop go-agent
+	docker stop ${CONTAINER_NAME}
 
 kill:
-	docker kill go-agent
-	docker rm go-agent
+	docker kill ${CONTAINER_NAME}
+	docker rm ${CONTAINER_NAME}
 
