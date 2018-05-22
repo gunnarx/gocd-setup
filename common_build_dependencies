@@ -46,5 +46,5 @@ texinfo
 unzip
 wget
 xterm
--meson
+qemu-system-x86
 -imagemagick
