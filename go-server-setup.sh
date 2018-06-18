@@ -127,7 +127,7 @@ restore_cruise_config_from_backup() {
       if fgrep -q '<passwordFile path=' cruise-config.xml ; then
 
          echo "WARNING:  Resetting password file location to $PASSWORD_FILE"
-         sed -i "s@passwordFile path=\".*\$@passwordFile path=\"$PASSWORD_FILE\" />@" cruise-config.xml
+         sed -i "s@passwordFile path=\".*\"$@passwordFile path=\"$PASSWORD_FILE\"@" cruise-config.xml
 
          # Need to also store a password file assuming there was one.
          echo
@@ -304,7 +304,7 @@ configure_cruise_config_backup
 configure_commands_repo
 
 echo "NOTE:  Setting password file location to $PASSWORD_FILE"
-sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@' cruise-config.xml
+sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@" cruise-config.xml
 
 cd $MYDIR
 echo
@@ -320,5 +320,5 @@ service go-server status
 echo "Try starting with"
 echo "sudo service go-server start"
 echo "otherwise with:"
-echo 'sudo -u go /etc/init.d/go-server start'
+echo "sudo -u go /etc/init.d/go-server start"
 
