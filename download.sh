@@ -38,6 +38,7 @@ fileurl="$filehost/binaries/${version}/${dir}/${file}"
 agent_str="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 
 curl=$(which curl)
+echo "Downloading $file"
 [ -x "$curl" ] || { echo "Can't find curl -- not installed?" ; exit 1 ; }
 
 if [ -f "$file" ] ; then
