@@ -153,13 +153,15 @@ restore_cruise_config_from_backup() {
 # git (recommended)
 # ----------------------------------------------------------------
 configure_cruise_config_backup() {
+  password_file="$1"
 
    if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
 
       cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
       sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
       sudo -u go git config push.default simple || fail git config push
-
+      echo "NOTE:  Setting password file location to $password_file"
+      sed -i "s@<passwordFile path=\".*\$@<passwordFile path=\"$password_file\"/>@" cruise-config.xml
       cd -
 
       # Set up cron job for hourly backups
@@ -302,11 +304,9 @@ setup_account_creation_application # <- optional
 
 # Optional functions - comment them if you don't need them.
 restore_cruise_config_from_backup
-configure_cruise_config_backup
+configure_cruise_config_backup "$PASSWORD_FILE"
 configure_commands_repo
 
-echo "NOTE:  Setting password file location to $PASSWORD_FILE"
-sed -i "s@<passwordFile path=\".*\$@<passwordFile path=\"$PASSWORD_FILE\"/>@" cruise-config.xml
 
 cd $MYDIR
 echo
