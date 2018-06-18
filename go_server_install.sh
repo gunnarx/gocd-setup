@@ -11,4 +11,6 @@ $init                                               && \
 sudo $installer -y install git                      && \
 git clone http://github.com/gunnarx/gocd-setup      && \
 cd gocd-setup                                       && \
+echo "Running from:"                                && \
+git log --date=iso --format=fuller --stat --abbrev-commit --decorate HEAD^..HEAD   && \
 ./go-server-setup.sh
