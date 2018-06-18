@@ -204,7 +204,9 @@ configure_commands_repo() {
       # Set up cron job for hourly updates, if command repo changes
       D="$PWD"  # <- got some weird error with pushd/popd... hmm
       cd "$COMMANDS_DIR" || fail "cd commands dir"
-      sudo -u go git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
+      echo "Cloning commands repo from $COMMANDS_REMOTE into $COMMANDS_DIR_NAME"
+      git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
+      chown -R go "$COMMANDS_DIR_NAME" || fail "Can't reset owner on commands repo"
       cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
       cd "$D"
 
@@ -304,7 +306,7 @@ configure_cruise_config_backup
 configure_commands_repo
 
 echo "NOTE:  Setting password file location to $PASSWORD_FILE"
-sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@" cruise-config.xml
+sed -i "s@<passwordFile path=\".*\$@<passwordFile path=\"$PASSWORD_FILE\"/>@" cruise-config.xml
 
 cd $MYDIR
 echo
