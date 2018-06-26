@@ -47,4 +47,4 @@ unzip
 wget
 xterm
 qemu-system-x86
--imagemagick
+python2.7-dev
