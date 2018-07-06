@@ -20,5 +20,8 @@ service cron start &
 /bin/ip addr add 192.168.7.1/24 dev tap0
 /bin/ip link set tap0 up
 
+# Set group permission on kvm device
+chown root:kvm /dev/kvm
+
 /sbin/setuser go /usr/share/go-agent/agent.sh
 
