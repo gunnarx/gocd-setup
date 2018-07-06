@@ -20,7 +20,7 @@ ENV YOCTO_CACHE=/var/cache/yocto
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size down.
 RUN apt-get update ;\
-    apt-get install -y git sudo ;\
+    apt-get install -y git sudo qemu-system-x86 uml-utilities;\
     apt-get clean ;\
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
@@ -53,6 +53,8 @@ RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
 # and other needed dirs
 RUN mkdir -p /etc/service/go-agent "$YOCTO_CACHE"
 ADD go-agent.runit.sh /etc/service/go-agent/run
+
+RUN usermod -a -G kvm go
 
 # Use baseimage-docker's init system as default command
 CMD ["/sbin/my_init"]

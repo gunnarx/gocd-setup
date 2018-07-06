@@ -58,6 +58,15 @@ fail unnecessarily, so try to avoid it.
 $ make build  # <- ensure you have the rights to run docker, or use sudo
 $ make run    # <- same here
 ```
+
+There are a few special variants of the agent.  QEMU support for automated
+testing:
+```
+$ make run_qemu    # Ability to run QEMU (with KVM) from within container
+```
+
+and also a virtualbox enabled variant (unsupported, see below).
+
 Your agent should now start up, and contact the server. Notify a
 go.genivi.org administrator to have them check the list of pending agents,
 and enable yours.

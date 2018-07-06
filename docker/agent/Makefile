@@ -31,6 +31,11 @@ CONTAINER_NAME ?= genivi-go-agent
 CONTAINER_NAME_VBOX ?= go-agent-vbox
 CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox
 
+# This is a special version that supports running QEMU in container - for
+# executing automated system tests with QEMU.  Only the run command differs
+CONTAINER_NAME_QEMU ?= go-agent-qemu
+CONTAINER_HOSTNAME_QEMU ?= yournamehere-go-qemu-agent
+
 default:
 	@echo "make [build|build_vbox|run|run_vbox|clean|logs|shell|stop|kill]"
 
@@ -48,6 +53,12 @@ run:
 	#sudo chcon -Rt svirt_sandbox_file_t "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
 	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
+
+# QEMU variant -- the image is the same as the standard one, only run
+# command differs
+run_qemu:
+	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME_QEMU} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
+	docker run -h "${CONTAINER_HOSTNAME_QEMU}" -d -ti --cap-add=NET_ADMIN --device=/dev/net/tun --device=/dev/kvm -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 
 # Variant with Virtualbox installation (needs Virtualbox installed and also the host vboxdrv mounted into container)
 build_vbox:
