@@ -23,7 +23,7 @@
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
 FROM phusion/baseimage:latest
 
-LABEL maintainer "Gunnar Andersson <gand@acm.org>"
+LABEL maintainer "Gunnar Andersson <gandersson@genivi.org>"
 
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size  down.

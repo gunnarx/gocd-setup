@@ -7,7 +7,7 @@
 # ---------------------------------------------------------------------------
 # SETTINGS
 # ---------------------------------------------------------------------------
-VERSION=18.7.0-7121
+VERSION=19.1.0-8469
 GO_HOME_DIR=/var/go
 CRUISE_CONFIG_DIR=/var/lib/go-server/db/config.git/
 COMMANDS_DIR=/var/lib/go-server/db/command_repository
