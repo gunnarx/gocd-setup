@@ -9,7 +9,6 @@
 # ---------------------------------------------------------------------------
 GO_HOME_DIR=/var/go
 CRUISE_CONFIG_DIR=/go-server/config/
-COMMANDS_DIR=/go-server/db/command_repository
 COMMANDS_DIR_NAME=genivi  # <- configurable, note it must ALSO be configured in GoCD
 CRONSCRIPTS=/root/
 CRONTAB=/etc/crontab
@@ -178,32 +177,6 @@ configure_cruise_config_backup() {
 
 }
 
-# ----------------------------------------------------------------
-# Function: Pull custom commands repo from some URL
-# (optional / not really required)
-# ----------------------------------------------------------------
-configure_commands_repo() {
-   if [ "$COMMANDS_REMOTE" != "none" ] ; then
-      sudo mkdir -p "$COMMANDS_DIR" || fail "mkdir commands dir"
-      sudo chown go:go "$COMMANDS_DIR" || fail "chown commands dir"
-      sudo chmod 755 "$COMMANDS_DIR"   || fail "chmod commands dir"
-
-      # Set up cron job for hourly updates, if command repo changes
-      D="$PWD"  # <- got some weird error with pushd/popd... hmm
-      cd "$COMMANDS_DIR" || fail "cd commands dir"
-      echo "Cloning commands repo from $COMMANDS_REMOTE into $COMMANDS_DIR_NAME"
-      git clone $COMMANDS_REMOTE $COMMANDS_DIR_NAME || fail "Can't clone commands repo"
-      chown -R go "$COMMANDS_DIR_NAME" || fail "Can't reset owner on commands repo"
-      cd "$COMMANDS_DIR_NAME" || fail "cd to commands git dir"
-      cd "$D"
-
-      sudo install -m 755 ./go-command-cronjob $CRONSCRIPTS/ || fail "Copying command cronscript"
-   else
-      echo "git pull URL for commands repo was not configured -- skipping"
-   fi
-}
-
-
 # MAIN SCRIPT STARTING -- server
 
 # ---------------------------------------------------------------------------
@@ -261,15 +234,11 @@ prompt_for_git_urls  # <- this user-interactive is useful to do while we wait fo
 #echo "OK init is done.  Stopping go-server."
 #sudo service go-server stop
 
-# This seems like it's not being created by itself?
-su go -c "mkdir -m 755 -p $COMMANDS_DIR"
-
 # FIXME: This does not actually set up the application currently
 # it only creates the user and home dir...
 setup_account_creation_application # <- optional
 
 configure_cruise_config_backup "$PASSWORD_FILE"
-configure_commands_repo
 
 cd $MYDIR
 echo
