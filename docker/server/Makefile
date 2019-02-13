@@ -34,7 +34,7 @@ build:
 	@echo "Abort this (CTRL-C) if you have not (waiting 4 seconds...)"
 	@echo "^^^^"
 	@sleep 4
-	docker build --tag=${IMAGE_NAME}:latest .
+	docker build --no-cache --tag=${IMAGE_NAME}:latest .
 
 
 run:
