@@ -203,7 +203,7 @@ echo TODO INSTALLATIONS ALPINE
 #esac
 
 # Optional functions - comment them if you don't need them.
-restore_cruise_config_from_backup
+#restore_cruise_config_from_backup
 
 # --------------------------------------------------------------------------
 # Run server once to go through initialization
@@ -238,7 +238,7 @@ prompt_for_git_urls  # <- this user-interactive is useful to do while we wait fo
 # it only creates the user and home dir...
 setup_account_creation_application # <- optional
 
-configure_cruise_config_backup "$PASSWORD_FILE"
+#configure_cruise_config_backup "$PASSWORD_FILE"
 
 cd $MYDIR
 echo
