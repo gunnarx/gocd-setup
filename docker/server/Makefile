@@ -43,15 +43,15 @@ run:
 	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines \
 	   --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 \
 	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_80_8153}:8153 \
-	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest \
-	   /sbin/my_init /bin/bash
+	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
+	   
 	@echo
 	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
 	@echo "If you have no existing users, make sure the file is empty"
 	@echo 
 	@echo 'Go server seems to reset the password file location on first run - waiting 30 seconds and setting it to what we want.'
 	sleep 30
-	docker exec ${CONTAINER_NAME} sed -i 's@passwordFile path="/.*"@passwordFile path="${USERFILE_STORAGE}/users"@' /etc/go/cruise-config.xml
+	docker exec ${CONTAINER_NAME} sed -i 's@passwordFile path="/.*"@passwordFile path="${USERFILE_STORAGE}/users"@' /go-server/config/cruise-config.xml
 	@echo
 	@echo "OK it should be done.  If not, attach and check that passwordFile is set to ${USERFILE_STORAGE} in /etc/go/cruise-config.xml"
 	@echo

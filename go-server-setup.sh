@@ -7,13 +7,13 @@
 # ---------------------------------------------------------------------------
 # SETTINGS
 # ---------------------------------------------------------------------------
-VERSION=19.1.0-8469
 GO_HOME_DIR=/var/go
-CRUISE_CONFIG_DIR=/var/lib/go-server/db/config.git/
-COMMANDS_DIR=/var/lib/go-server/db/command_repository
+CRUISE_CONFIG_DIR=/go-server/config/
+COMMANDS_DIR=/go-server/db/command_repository
 COMMANDS_DIR_NAME=genivi  # <- configurable, note it must ALSO be configured in GoCD
-CRONSCRIPTS=/etc/cron.hourly
-PASSWORD_FILE=/var/go/users
+CRONSCRIPTS=/root/
+CRONTAB=/etc/crontab
+PASSWORD_FILE=/gousers/users
 
 # Optional: The following URLs should point to an external git repo to which we
 # will have the server push the config XML as a backup. This will be added as a
@@ -58,36 +58,12 @@ fail() { echo "Something went wrong - check script" 1>&2 ; echo msg: "$@" 1>&2 ;
 # ---------------------------------------------------------------------------
 setup_account_creation_application() {
    echo 'Creating gouser for account-creation application'
-   sudo mkdir /home/gouser
-   sudo useradd gouser -g go -d /home/gouser --uid 1501
-   sudo chown -R go:go /home/gouser
-}
+   mkdir /home/gouser
+   mkdir "$GO_HOME_DIR"
+   mkdir -p "$GO_HOME_DIR" && echo make dir Go home dir ok
+   chown -R go "$GO_HOME_DIR"
+   adduser gouser go -h "$GO_HOME_DIR" -u 1501
 
-# ---------------------------------------------------------------------------
-# Function: Configure JAVA_HOME variable
-# ---------------------------------------------------------------------------
-# This is slightly overcomplicated and can probably be rewritten.  Also this
-# might be done correctly by the post-install scripts in the deb/rpm but if it
-# fails here is another attempt. Anyway, the point is to figure out JAVA_HOME
-# and add it to the config file.
-
-add_java_to_conf() {
-   sudo cp /etc/default/go-server /tmp/newconf.$$ || fail "copying conf"
-   sudo chmod 666 /tmp/newconf.$$ || fail "conf?"
-
-   javadir=$(ls /usr/lib/jvm | egrep "java-.*-openjdk-.*$" | head -1)
-   java_home=/usr/lib/jvm/$javadir/jre
-   [ -d "$java_home" ] || fail "Could not figure out JAVA_HOME directory - please check the script"
-   [ -x "$java_home/bin/java" ] || fail "Could not find java executable in JAVA_HOME ($java_home) - please check the script"
-
-   cat <<EEE >>/tmp/newconf.$$
-export JAVA_HOME="$java_home"
-EEE
-
-   # OK, put it back and just in case, fix up permissions and stuff
-   sudo cp /tmp/newconf.$$ /etc/default/go-server || fail "Putting conf back in /etc again"
-   sudo chown root:root /etc/default/go-server
-   sudo chmod 644 /etc/default/go-server
 }
 
 # --------------------------------------------------------------------------
@@ -113,13 +89,16 @@ prompt_for_git_urls() {
 # even if you do not setup a writable git to store subsequent changes.
 # ----------------------------------------------------------------
 restore_cruise_config_from_backup() {
-
    if [ "$CONFIG_REMOTE_FIRST_PULL" != "none" ] ; then
       echo "Getting initial pipeline setup from git repo"
-      cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
-      sudo -u go git remote add first_pull $CONFIG_REMOTE_FIRST_PULL || fail Adding backup git remote
-      sudo -u go git fetch first_pull || fail git fetch
-      sudo -u go git reset first_pull/master --hard || fail git restore backup
+      cd "$CRUISE_CONFIG_DIR" || fail "config dir still not available?"
+      chown -R go "$CRUISE_CONFIG_DIR/"
+      ls -alR "$CRUISE_CONFIG_DIR/"
+      su go -c whoami
+      su go -c "git init ."
+      su go -c "git remote add first_pull $CONFIG_REMOTE_FIRST_PULL" || fail Adding backup git remote
+      su go -c "git fetch first_pull" || fail git fetch
+      su go -c "git reset first_pull/master --hard" || fail git restore backup
 
       # Is there a password file defined in config file?
       # If so we reset it to a known location and start using that instead, less complicated that way.
@@ -134,13 +113,17 @@ restore_cruise_config_from_backup() {
          echo
          echo "WARNING: If users were defined in restored cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin"
          echo
-         sudo -u go cp "$MYDIR/password_file_template" $PASSWORD_FILE || fail "Copying password file template"
-         sudo chown go:go $PASSWORD_FILE
-         sudo chmod 600 $PASSWORD_FILE
+
+         PDIR="$(dirname "$PASSWORD_FILE")"
+         mkdir -p "$PDIR"
+         chown go "$PDIR"
+         cp "$MYDIR/password_file_template" "$PASSWORD_FILE" || fail "Copying password file template"
+         chown go:go $PASSWORD_FILE
+         chmod 600 $PASSWORD_FILE
       fi
 
-      # Replace the actually used config (in /etc/go) with the one taken from backup
-      sudo -u go cp "$CRUISE_CONFIG_DIR/cruise-config.xml" /etc/go/
+#      # Replace the actually used config (in /etc/go) with the one taken from backup
+#      su go -c "cp $CRUISE_CONFIG_DIR/cruise-config.xml /etc/go/"
       cd -
    else
       echo "git pull URL for initial pipeline config was not configured -- skipping"
@@ -157,22 +140,24 @@ configure_cruise_config_backup() {
    if [ "$CONFIG_REMOTE_PUSH" != "none" ] ; then
 
       cd "$CRUISE_CONFIG_DIR" || fail "config.git dir still not available?"
-      sudo -u go git remote add backup $CONFIG_REMOTE_PUSH || fail Adding backup git remote
-      sudo -u go git config push.default simple || fail git config push
+      su go -c "git remote add backup $CONFIG_REMOTE_PUSH" || fail Adding backup git remote
+      su go -c "git config push.default simple" || fail git config push
       echo "NOTE:  Setting password file location to $password_file"
       sed -i "s@<passwordFile path=\".*\$@<passwordFile path=\"$password_file\"/>@" cruise-config.xml
       cd -
 
       # Set up cron job for hourly backups
       echo "Adding hourly crontab job to push config changes"
-      sudo install -m 755 ./go-config-cronjob $CRONSCRIPTS/ || fail "Copying config cronscript"
+      echo "0 * * * * $CRONSCRIPTS/go-config-cronjob" >> "$CRONTAB"
+      install -m 755 ./go-config-cronjob $CRONSCRIPTS/go-config-cronjob || fail "Copying config cronscript"
 
       # Set up SSH key
       if [ -f $GO_HOME_DIR/.ssh/id_rsa ] ; then
          echo "SSH key exists -- skipping"
       else
-         sudo -u go mkdir -p -m 700 $GO_HOME_DIR/.ssh  || fail "Creating .ssh dir"
-         sudo -u go ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N "" || fail "Creating ssh keys"
+         mkdir -p -m 700 "$GO_HOME_DIR/.ssh"  || fail "Creating .ssh dir"
+         chown go "$GO_HOME_DIR/.ssh"
+         su go -c "ssh-keygen -f $GO_HOME_DIR/.ssh/id_rsa -N \"\"" || fail "Creating ssh keys"
          echo
          echo "Here is the public key for git access -- add it to GitHub or your git server (read WARNING)"
          echo
@@ -182,7 +167,8 @@ configure_cruise_config_backup() {
          echo
          cat $GO_HOME_DIR/.ssh/id_rsa.pub || fail "cat pub key"
 
-         sudo -u go install -T -m 644 ./ssh_config $GO_HOME_DIR/.ssh/config
+         cp ./ssh_config "$GO_HOME_DIR/.ssh/config"
+         chmod 644 "$GO_HOME_DIR/.ssh/config"
          echo
       fi
 
@@ -221,103 +207,85 @@ configure_commands_repo() {
 # MAIN SCRIPT STARTING -- server
 
 # ---------------------------------------------------------------------------
-# Download and install server (helper script)
-# ---------------------------------------------------------------------------
-echo Downloading go-server installation
-. ./download.sh server $VERSION # Sets $DL_PATH
-
-# ---------------------------------------------------------------------------
 # Install Java, git and stuff.  N.B.: Java version is coded into helper script.
 # ---------------------------------------------------------------------------
-./install-java.sh
-./install-prerequisites.sh
+#./install-prerequisites.sh
+
+echo TODO INSTALLATIONS ALPINE
 
 # ---------------------------------------------------------------------------
 # Install the rpm/deb previously downloaded
 # ---------------------------------------------------------------------------
-type=$(./rpm-or-deb.sh)
-case $type in
-   rpm)
-      sudo rpm -iv "$DL_PATH" || fail "RPM install failed"
-      ;;
-   deb)
-      sudo dpkg -i "$DL_PATH" || fail "DEB install failed"
-      ;;
-   *)
-      fail "Unsupported package type - fix script"
-      ;;
-esac
+#type=$(./rpm-or-deb.sh)
+#case $type in
+#   rpm)
+#      sudo rpm -iv "$DL_PATH" || fail "RPM install failed"
+#      ;;
+#   deb)
+#      sudo dpkg -i "$DL_PATH" || fail "DEB install failed"
+#      ;;
+#   *)
+#      fail "Unsupported package type - fix script"
+#      ;;
+#esac
 
-# ---------------------------------------------------------------------------
-# Setting up directories
-# ---------------------------------------------------------------------------
-
-# User/group go is created by rpm/deb package already...
-# This is needed for zip install only
-
-# echo 'Creating "go" user'
-# sudo groupadd go --gid 1500
-# sudo useradd go -g go --uid 1500 -d /var/go
-
-# Most (all?) these dirs are likely created by deb/rpm installation
-# but creating them just in case.
-echo "Fixing install/log directories to be accessible for go user"
-sudo mkdir -m 755 -p /var/{log,lib,run}/go-server $GO_HOME_DIR || fail "Can't create /var/... directories"
-sudo chown -R go:go /var/{log,lib,run}/go-server $GO_HOME_DIR || fail "Can't chown a directory"
-
-echo Determining JAVA_HOME once again and adding to go-agent conf
-add_java_to_conf
+# Optional functions - comment them if you don't need them.
+restore_cruise_config_from_backup
 
 # --------------------------------------------------------------------------
 # Run server once to go through initialization
 # --------------------------------------------------------------------------
 
-echo
-echo "Starting go-server to make it go through initialization"
-sudo service go-server start >/dev/null 2>&1 &
+#echo
+#echo "Starting go-server to make it go through initialization"
+#sudo service go-server start >/dev/null 2>&1 &
+#
+#echo "While we wait, set up the git remote for the pipeline configuration"
+#
+#exit
 
-echo "While we wait, set up the git remote for the pipeline configuration"
-
+exit
 prompt_for_git_urls  # <- this user-interactive is useful to do while we wait for the long startup
 
 # Loop until we see the config dir ready
-echo
-echo "Checking for directories $CRUISE_CONFIG_DIR"
-echo "Note: Total waiting time should not be more than 30 seconds or so."
-[ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
-while [ ! -d $CRUISE_CONFIG_DIR ] ; do
-   echo -n "."
-   sleep 1
-done
-sleep 10
+#echo
+#echo "Checking for directories $CRUISE_CONFIG_DIR"
+#echo "Note: Total waiting time should not be more than 30 seconds or so."
+#[ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
+#while [ ! -d $CRUISE_CONFIG_DIR ] ; do
+#   echo -n "."
+#   sleep 1
+#done
+#sleep 10
 
-echo "OK init is done.  Stopping go-server."
-sudo service go-server stop
+#echo "OK init is done.  Stopping go-server."
+#sudo service go-server stop
 
 # This seems like it's not being created by itself?
-sudo -u go mkdir -m 755 -p $COMMANDS_DIR
+su go -c "mkdir -m 755 -p $COMMANDS_DIR"
 
 # FIXME: This does not actually set up the application currently
 # it only creates the user and home dir...
 setup_account_creation_application # <- optional
 
-# Optional functions - comment them if you don't need them.
-restore_cruise_config_from_backup
 configure_cruise_config_backup "$PASSWORD_FILE"
 configure_commands_repo
-
 
 cd $MYDIR
 echo
 echo 'Copying password file template'
+
+PDIR="$(dirname "$PASSWORD_FILE")"
+mkdir -p "$PDIR"
+chown go "$PDIR"
+cp "$MYDIR/password_file_template" "$PASSWORD_FILE" || fail "Copying password file template"
+chown go:go $PASSWORD_FILE
+chmod 600 $PASSWORD_FILE
+
 echo 'WARNING: If users are defined in cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin'
 cp password_file_template $PASSWORD_FILE || fail "Copying password file template"
-sudo chown go:go $PASSWORD_FILE
-sudo chmod 600 $PASSWORD_FILE
 
 echo
-echo Current Status:
-service go-server status
 echo "Try starting with"
 echo "sudo service go-server start"
 echo "otherwise with:"
