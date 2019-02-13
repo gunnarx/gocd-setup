@@ -2,7 +2,7 @@ CONTAINER_NAME ?= go-server
 IMAGE_NAME ?= genivi/go-server
 
 # External IP / Ports
-GO_SERVER_IP ?= 127.0.0.1
+GO_SERVER_IP ?= 0.0.0.0
 # Port 8153 which is HTTP and therefore normally mapped to 80
 GO_SERVER_PORT_80_8153 ?= 80
 # Port 8154 which is HTTPS and therefore normally mapped to 443
