@@ -51,7 +51,6 @@ run:
 	@echo 
 	@echo 'Go server seems to reset the password file location on first run - waiting 30 seconds and setting it to what we want.'
 	sleep 30
-	docker exec ${CONTAINER_NAME} sed -i 's@passwordFile path="/.*"@passwordFile path="${USERFILE_STORAGE}/users"@' /go-server/config/cruise-config.xml
 	@echo
 	@echo "OK it should be done.  If not, attach and check that passwordFile is set to ${USERFILE_STORAGE} in /etc/go/cruise-config.xml"
 	@echo
