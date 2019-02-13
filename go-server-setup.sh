@@ -57,7 +57,6 @@ fail() { echo "Something went wrong - check script" 1>&2 ; echo msg: "$@" 1>&2 ;
 # ---------------------------------------------------------------------------
 setup_account_creation_application() {
    echo 'Creating gouser for account-creation application'
-   mkdir /home/gouser
    mkdir "$GO_HOME_DIR"
    mkdir -p "$GO_HOME_DIR" && echo make dir Go home dir ok
    chown -R go "$GO_HOME_DIR"
@@ -121,8 +120,6 @@ restore_cruise_config_from_backup() {
          chmod 600 $PASSWORD_FILE
       fi
 
-#      # Replace the actually used config (in /etc/go) with the one taken from backup
-#      su go -c "cp $CRUISE_CONFIG_DIR/cruise-config.xml /etc/go/"
       cd -
    else
       echo "git pull URL for initial pipeline config was not configured -- skipping"
@@ -177,68 +174,11 @@ configure_cruise_config_backup() {
 
 }
 
-# MAIN SCRIPT STARTING -- server
-
-# ---------------------------------------------------------------------------
-# Install Java, git and stuff.  N.B.: Java version is coded into helper script.
-# ---------------------------------------------------------------------------
-#./install-prerequisites.sh
-
-echo TODO INSTALLATIONS ALPINE
-
-# ---------------------------------------------------------------------------
-# Install the rpm/deb previously downloaded
-# ---------------------------------------------------------------------------
-#type=$(./rpm-or-deb.sh)
-#case $type in
-#   rpm)
-#      sudo rpm -iv "$DL_PATH" || fail "RPM install failed"
-#      ;;
-#   deb)
-#      sudo dpkg -i "$DL_PATH" || fail "DEB install failed"
-#      ;;
-#   *)
-#      fail "Unsupported package type - fix script"
-#      ;;
-#esac
-
-# Optional functions - comment them if you don't need them.
-#restore_cruise_config_from_backup
-
-# --------------------------------------------------------------------------
-# Run server once to go through initialization
-# --------------------------------------------------------------------------
-
-#echo
-#echo "Starting go-server to make it go through initialization"
-#sudo service go-server start >/dev/null 2>&1 &
-#
-#echo "While we wait, set up the git remote for the pipeline configuration"
-#
-#exit
-
-exit
 prompt_for_git_urls  # <- this user-interactive is useful to do while we wait for the long startup
-
-# Loop until we see the config dir ready
-#echo
-#echo "Checking for directories $CRUISE_CONFIG_DIR"
-#echo "Note: Total waiting time should not be more than 30 seconds or so."
-#[ ! -d $CRUISE_CONFIG_DIR ] && echo "still not there... waiting until I see it"
-#while [ ! -d $CRUISE_CONFIG_DIR ] ; do
-#   echo -n "."
-#   sleep 1
-#done
-#sleep 10
-
-#echo "OK init is done.  Stopping go-server."
-#sudo service go-server stop
 
 # FIXME: This does not actually set up the application currently
 # it only creates the user and home dir...
 setup_account_creation_application # <- optional
-
-#configure_cruise_config_backup "$PASSWORD_FILE"
 
 cd $MYDIR
 echo
