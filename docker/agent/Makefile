@@ -58,7 +58,7 @@ run:
 # command differs
 run_qemu:
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME_QEMU} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
-	docker run -h "${CONTAINER_HOSTNAME_QEMU}" -d -ti --cap-add=NET_ADMIN --device=/dev/net/tun --device=/dev/kvm -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
+	docker run -h "${CONTAINER_HOSTNAME_QEMU}" -d -ti --cap-add=NET_ADMIN --device=/dev/net/tun --device=/dev/kvm -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME_QEMU} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
 
 # Variant with Virtualbox installation (needs Virtualbox installed and also the host vboxdrv mounted into container)
 build_vbox:
