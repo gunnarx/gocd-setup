@@ -41,7 +41,7 @@ run:
 	docker run -d -ti -v ${USERFILE_STORAGE}:/gousers \
 	   -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts \
 	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines \
-	   --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 \
+	   --name=${CONTAINER_NAME} \
 	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_80_8153}:8153 \
 	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
 	   
