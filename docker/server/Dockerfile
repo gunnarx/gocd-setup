@@ -52,5 +52,5 @@ RUN chown go:go /var/go/.github ; chmod 700 /var/go/.github
 EXPOSE 8153 8154
 
 # Use baseimage-docker's init system as default command
-CMD ["/go-server/server.sh"]
+CMD ["/docker-entrypoint.sh"]
 
