@@ -2,7 +2,7 @@ CONTAINER_NAME ?= go-server
 IMAGE_NAME ?= genivi/go-server
 
 # External IP / Ports
-GO_SERVER_IP ?= 0.0.0.0
+GO_SERVER_IP ?= 0.0.0.0  # <-- NOTE THIS IS NO LONGER USED -- EDIT BELOW IF NEEDED
 # Port 8153 which is HTTP and therefore normally mapped to 80
 GO_SERVER_PORT_80_8153 ?= 80
 # Port 8154 which is HTTPS and therefore normally mapped to 443
@@ -42,8 +42,14 @@ run:
 	   -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts \
 	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines \
 	   --name=${CONTAINER_NAME} \
-	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_80_8153}:8153 \
-	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
+	   -p ${GO_SERVER_PORT_80_8153}:8153 \
+	   -p ${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
+
+# Seems like it's better, at least in the AWS instance case, to not specify
+# any IP address, so we're using the two lines above ^^ instead
+#	   --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 \
+#	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_80_8153}:8153 \
+#	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
 	   
 	@echo
 	@echo "OK - now running.  IMPORTANT! Now replace ${USERFILE_STORAGE}/users with an appropriate password file containing your existing users."
