@@ -25,12 +25,8 @@ FROM gocd/gocd-server:v19.1.0
 
 LABEL maintainer "Gunnar Andersson <gandersson@genivi.org>"
 
-# Need git to fetch the provisioning script, the rest is done by the script
-# Clean as much as possible before committing keeps the docker image size  down.
-#RUN apt-get update ;\
-#    apt-get install -y git sudo ;\
-#    apt-get clean ;\
-#    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
+# Required packages (for manipulating the TLS certificates)
+RUN apk add openssl
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
@@ -41,7 +37,6 @@ RUN git clone -b v2.0 http://github.com/gunnarx/gocd-setup.git /tmp/gocd-setup 2
 
 # Run the actual provisioning script -
 RUN cd /tmp/gocd-setup && git rev-parse HEAD
-
 RUN cd /tmp/gocd-setup && ./go-server-setup.sh
 
 # Store OAUTH user/token used for Pull-Request plugin
