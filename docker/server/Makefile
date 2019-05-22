@@ -1,5 +1,5 @@
 CONTAINER_NAME ?= go-server
-IMAGE_NAME ?= genivi/go-server
+IMAGE_NAME ?= genivi/go-server:latest
 
 # External IP / Ports
 GO_SERVER_IP ?= 0.0.0.0  # <-- NOTE THIS IS NO LONGER USED -- EDIT BELOW IF NEEDED
@@ -13,13 +13,13 @@ GO_SERVER_PORT_443_8154 ?= 443
 # 2. Make sure the "go" user inside container can write to it on the host
 # (make it writable by all and then when uid is known you can create
 # limits)
-ARTIFACT_STORAGE ?= /mnt/go/go-server-artifacts
+ARTIFACT_STORAGE ?= /home/go/go-server-artifacts
 
 # Same principle for pipelines (but they don't require quite as much
 # storage -- this is where the server clones the git repos to monitor
 # them for changes but build results are not here - they are on go *agents*
 # and in artifacts dir.
-PIPELINES_STORAGE ?= /mnt/go/go-server-pipelines
+PIPELINES_STORAGE ?= /home/go/go-server-pipelines
 
 # Recommend not changing this - it's easier to remember if the same
 # is used on host and in container.  The container uses /gousers
@@ -34,16 +34,15 @@ build:
 	@echo "Abort this (CTRL-C) if you have not (waiting 4 seconds...)"
 	@echo "^^^^"
 	@sleep 4
-	docker build --no-cache --tag=${IMAGE_NAME}:latest .
-
+	docker build --no-cache --tag=${IMAGE_NAME} .
 
 run:
 	docker run -d -ti -v ${USERFILE_STORAGE}:/gousers \
-	   -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts \
-	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines \
+	   -v ${ARTIFACT_STORAGE}:/godata/artifacts \
+	   -v ${PIPELINES_STORAGE}:/go-working-dir/pipelines \
 	   --name=${CONTAINER_NAME} \
 	   -p ${GO_SERVER_PORT_80_8153}:8153 \
-	   -p ${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest /bin/bash
+	   -p ${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME} /docker-entrypoint.sh
 
 # Seems like it's better, at least in the AWS instance case, to not specify
 # any IP address, so we're using the two lines above ^^ instead
@@ -68,8 +67,8 @@ run:
 clean:
 	@echo "docker rm -v ${CONTAINER_NAME}"
 	@docker rm -v ${CONTAINER_NAME} >/dev/null || echo "Container removed already"
-	@echo docker rmi ${IMAGE_NAME}:latest 
-	@docker rmi ${IMAGE_NAME}:latest 2>/dev/null || echo "Image removed already"
+	@echo docker rmi ${IMAGE_NAME}
+	@docker rmi ${IMAGE_NAME} 2>/dev/null || echo "Image removed already"
 
 logs:
 	docker logs -f ${CONTAINER_NAME}
