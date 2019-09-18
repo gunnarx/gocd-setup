@@ -17,7 +17,6 @@ git
 graphviz
 intltool
 iputils-ping
-lavacli
 libacl1-dev
 libboost-dev
 libboost-log-dev
