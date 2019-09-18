@@ -180,6 +180,13 @@ prompt_for_git_urls  # <- this user-interactive is useful to do while we wait fo
 # it only creates the user and home dir...
 setup_account_creation_application # <- optional
 
+# Optional functions - comment them if you don't need them.
+restore_cruise_config_from_backup
+configure_cruise_config_backup
+
+echo "NOTE:  Setting password file location to $PASSWORD_FILE"
+sed -i "s@<passwordFile path=\".*$@<passwordFile path=\"$PASSWORD_FILE\"/>@" cruise-config.xml
+
 cd $MYDIR
 echo
 echo 'Copying password file template'
