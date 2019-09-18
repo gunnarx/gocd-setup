@@ -53,6 +53,7 @@ EEE
 # ---------------------------------------------------------------------------
 ./install-java.sh
 ./install-prerequisites.sh
+./install-lava-testing.sh
 
 # ---------------------------------------------------------------------------
 # Download and install agent (helper script)
