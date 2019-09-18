@@ -103,7 +103,7 @@ restore_cruise_config_from_backup() {
       if fgrep -q '<passwordFile path=' cruise-config.xml ; then
 
          echo "WARNING:  Resetting password file location to $PASSWORD_FILE"
-         sed -i "s@passwordFile path=\".*\"\$@passwordFile path=\"$PASSWORD_FILE\"@" cruise-config.xml
+         sed -i "s@passwordFile path=\".*\"$@passwordFile path=\"$PASSWORD_FILE\"@" cruise-config.xml
 
          # Need to also store a password file assuming there was one.
          echo
