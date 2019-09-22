@@ -29,7 +29,7 @@ RUN apt-get update ;\
 #ADD dummy /tmp/dummy
 
 # Fetch script git repo
-RUN git clone http://github.com/genivigo/gocd-setup.git /root/gocd-setup 2>&1 && ls /root/gocd-setup
+RUN git clone http://github.com/genivigo/gocd-setup.git -b lava_agent /root/gocd-setup 2>&1 && ls /root/gocd-setup
 
 # Run the actual provisioning script -
 RUN cd /root/gocd-setup && ./go-agent-setup.sh
