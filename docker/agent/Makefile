@@ -15,7 +15,7 @@
 PIPELINES_STORAGE ?= /home/go/go-agent-pipelines
 
 # Set a unique name here
-CONTAINER_HOSTNAME ?= yournamehere-go-agent
+CONTAINER_HOSTNAME ?= docssite-agent
 
 # This is the default location. If you can place it on SSD (~120GB) then
 # that's an even better option - otherwise just leave it.
@@ -25,7 +25,7 @@ YOCTO_CACHE ?= ${PIPELINES_STORAGE}/__yocto_cache
 #  Other settings, normally not changed
 
 IMAGE_NAME ?= genivi/go-agent
-CONTAINER_NAME ?= genivi-go-agent
+CONTAINER_NAME ?= docssite-agent
 
 # This is a special version of the agent - you can ignore it for now.
 CONTAINER_NAME_VBOX ?= go-agent-vbox
