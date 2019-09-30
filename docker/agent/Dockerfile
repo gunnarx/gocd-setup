@@ -56,6 +56,23 @@ ADD go-agent.runit.sh /etc/service/go-agent/run
 
 RUN usermod -a -G kvm go
 
+# Install keys & credentials
+RUN mkdir -p /var/go/.ssh ;\
+    chown go:go /var/go/.ssh ;\
+    chmod 700 /var/go/.ssh
+
+ADD cip_lava_lab_cred /var/go/cip_lava_lab_cred
+RUN chown go /var/go/cip_lava_lab_cred
+
+ADD id_rsa /var/go/.ssh/id_rsa
+ADD id_rsa.pub /var/go/.ssh/id_rsa.pub
+RUN chown -R go /var/go/.ssh/* ;\
+    chmod 400 /var/go/.ssh/id_rsa* ;\
+    chmod 400 /var/go/cip_lava_lab_cred
+
+# Accept host key
+RUN su go -c "echo quit | sftp -i /var/go/.ssh/id_rsa -o StrictHostKeyChecking=no go_artifact_upload@docs.projects.genivi.org" || true
+
 # Use baseimage-docker's init system as default command
 CMD ["/sbin/my_init"]
 

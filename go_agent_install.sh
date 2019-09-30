@@ -10,6 +10,6 @@
 
 $init                                               && \
 sudo $installer -y install git                      && \
-git clone http://github.com/genivigo/gocd-setup     && \
+git clone http://github.com/genivigo/gocd-setup -b lava_agent && \
 cd gocd-setup                                       && \
 ./go-agent-setup.sh

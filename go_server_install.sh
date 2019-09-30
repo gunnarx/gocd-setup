@@ -9,7 +9,7 @@
 
 $init                                               && \
 sudo $installer -y install git                      && \
-git clone http://github.com/gunnarx/gocd-setup      && \
+git clone http://github.com/genivigo/gocd-setup -b lava_agent && \
 cd gocd-setup                                       && \
 echo "Running from:"                                && \
 git log --date=iso --format=fuller --stat --abbrev-commit --decorate HEAD^..HEAD   && \
