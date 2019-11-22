@@ -21,7 +21,7 @@
 # good base container, so let's start there.
 
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
-FROM gocd/gocd-server:v19.1.0
+FROM gocd/gocd-server:v19.10.0
 
 LABEL maintainer "Gunnar Andersson <gandersson@genivi.org>"
 
