@@ -26,6 +26,7 @@ FROM gocd/gocd-server:v19.1.0
 LABEL maintainer "Gunnar Andersson <gandersson@genivi.org>"
 
 # Required packages (for manipulating the TLS certificates)
+USER root
 RUN apk add openssl
 
 # Touching a dummy file forces cache invalidation so
