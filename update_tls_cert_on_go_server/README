@@ -1,0 +1,9 @@
+Run the script named :
+tls_cert_update_runme.sh
+
+The other script "tls_cert_update_second_stage.sh"
+is automatically copied into the container, and then 
+run inside of the container.
+
+For debugging, edit each script to enable pause_between_commands
+by assigning it =true
