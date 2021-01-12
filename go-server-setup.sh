@@ -116,7 +116,7 @@ restore_cruise_config_from_backup() {
          mkdir -p "$PDIR"
          chown go "$PDIR"
          cp "$MYDIR/password_file_template" "$PASSWORD_FILE" || fail "Copying password file template"
-         chown go:go $PASSWORD_FILE
+         chown go $PASSWORD_FILE
          chmod 600 $PASSWORD_FILE
       fi
 
@@ -195,7 +195,7 @@ PDIR="$(dirname "$PASSWORD_FILE")"
 mkdir -p "$PDIR"
 chown go "$PDIR"
 cp "$MYDIR/password_file_template" "$PASSWORD_FILE" || fail "Copying password file template"
-chown go:go $PASSWORD_FILE
+chown go $PASSWORD_FILE
 chmod 600 $PASSWORD_FILE
 
 echo 'WARNING: If users are defined in cruise-config.xml, they must also exist in password file.  In particular the administrator(s), or you will not be able to log in as admin'

@@ -41,7 +41,7 @@ RUN cd /tmp/gocd-setup && ./go-server-setup.sh
 
 # Store OAUTH user/token used for Pull-Request plugin
 ADD .github /var/go/.github
-RUN chown go:go /var/go/.github ; chmod 700 /var/go/.github
+RUN chown go /var/go/.github ; chmod 700 /var/go/.github
 
 # Ports
 EXPOSE 8153 8154
